@@ -1,0 +1,26 @@
+<html>
+  <head>
+     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+<h1>Ovo je dio aplikacije za rad s dokumentima</h1>
+  </head>
+  <body>
+	<h1>Scenariji</h1>
+	 <ul class="list-group">
+	 	<?php
+	 	foreach ($this->filelist as $directory) {
+
+	 		echo '<a href="link"><li class="list-group-item">'.basename($directory).'</li></a>';
+	 	}
+	 	?>
+	</ul>
+	</br>
+	</br>
+	<a href="/gemark/public/index.php/application/elaborat/displayCreateScenario">Stvori novi scenarij</a>
+	</br>
+	<a href="/gemark/public/index.php/application/elaborat/displayEditScenario">Uredi postojeći scenarij</a>
+	</br>
+	<a href="/gemark/public/index.php/application/elaborat/displayTemplates">Templates</a>
+	</br>
+	<a href="/gemark/public/index.php/application/elaborat/uploadForm">Add template</a>
+  </body>
+</html>

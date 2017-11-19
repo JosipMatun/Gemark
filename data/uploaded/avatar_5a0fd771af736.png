@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-workspace name="Projects" soapui-version="5.2.1" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings/>
+  <con:project name="MPS SOAP">D:/Dropbox/task files/#SAP/drugi task-lookup tables/MPS SOAP-soapui-project.xml</con:project>
+  <con:project name="PrimaveraServiceTest">C:/Users/matun/Documents/PrimaveraServiceTest-soapui-project.xml</con:project>
+  <con:collectInfoForSupport>false</con:collectInfoForSupport>
+</con:soapui-workspace>

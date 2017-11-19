@@ -1,0 +1,12 @@
+<h1>Templates</h1>
+
+ <ul class="list-group">
+ 	<?php
+ 	foreach ($this->filelist as $directory) {
+ 		echo '<li class="list-group-item">'.basename($directory).'</li>';
+ 	}
+ 	?>
+ </ul>
+
+	</br>
+	<a href="/gemark/public/index.php/application/elaborat">Home</a>
