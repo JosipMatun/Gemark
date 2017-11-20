@@ -12,8 +12,8 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-use Application\form\UploadForm;
-use Application\form\CreateScenarioForm;
+use Application\Form\UploadForm;
+use Application\Form\CreateScenarioForm;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Filter\File\RenameUpload;
 
