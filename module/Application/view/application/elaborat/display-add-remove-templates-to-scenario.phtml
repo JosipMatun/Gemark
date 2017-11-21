@@ -1,0 +1,26 @@
+<h1>Trenutačni templatei za scenarij "<?= $this->scenarioName ?>"</h1> 
+ <ul class="list-group">
+ 	<?php
+ 	foreach ($this->filelist as $directory) {
+ 		echo '<li class="list-group-item">'.basename($directory).'</li>';
+ 	}
+ 	?>
+</ul>
+</br>
+</br>
+<h1>Odabir novih templatea:</h1> 
+<?php
+$form = $this->form;
+$form->setAttribute('action', dirname($_SERVER[REQUEST_URI])."/displayAddRemoveTemplatesToScenario");
+$form->prepare();
+ 
+echo $this->form()->openTag($form);
+echo $this->formRow($form->get('scenario-name'));
+echo $this->formRow($form->get('templates'), null, null, 'template-file');
+?><button>Submit</button><?php
+echo $this->form()->closeTag();
+?>
+
+	</br>
+	<a href="<?php echo dirname($_SERVER[REQUEST_URI]);?>">Home</a>
+

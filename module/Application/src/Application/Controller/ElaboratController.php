@@ -12,10 +12,12 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
+use Zend\Http\Request;
+use Zend\Filter\File\RenameUpload;
+
 use Application\Form\UploadForm;
 use Application\Form\CreateScenarioForm;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Filter\File\RenameUpload;
+use Application\Form\AddRemoveTemplatesToScenarioForm;
 
 class ElaboratController extends AbstractActionController
 {
@@ -176,7 +178,7 @@ public function displayTemplatesAction(){
 }
 
 
-public function displayCreateScenarioAction(){    
+public function displayCreateScenarioAction(){
     $form     = new CreateScenarioForm('create-scenario-form');
     $tempFile = null;
 
@@ -187,18 +189,18 @@ public function displayCreateScenarioAction(){
         if ($form->isValid()) {
             $data = $form->getData();
             // Form is valid, save the form!return
-$this->forward()->dispatch('Application\Controller\Elaborat', [
-    'action' => 'createScenario',
-    'scenarioName' => $data
-]);
-        } else {
-            // Form not valid, but file uploads might be valid...
-            // Get the temporary file information to show the user in the view
-            $fileErrors = $form->get('scenario-name')->getMessages();
-            if (empty($fileErrors)) {
-                $tempFile = $form->get('scenario-name')->getValue();
-            }
+		$this->forward()->dispatch('Application\Controller\Elaborat', [
+			'action' => 'createScenario',
+			'scenarioName' => $data
+		]);
+    } else {
+        // Form not valid, but file uploads might be valid...
+        // Get the temporary file information to show the user in the view
+        $fileErrors = $form->get('scenario-name')->getMessages();
+        if (empty($fileErrors)) {
+            $tempFile = $form->get('scenario-name')->getValue();
         }
+    }
     }
 
     return array(
@@ -212,17 +214,87 @@ public function createScenarioAction(){
     $oldmask = umask(0);
     mkdir("data/scenarios/".$scenarioName['scenario-name'], 0777);
     umask($oldmask);
-            return $this->redirect()->toRoute(null,
-             array('module'     => 'application',
-                    'controller'=>'elaborat',
-                    'action' => 'displaySuccess'));
-            
+    return $this->redirect()->toRoute(null,
+     array('module'     => 'application',
+            'controller'=>'elaborat',
+            'action' => 'displaySuccess'));
+    
 }
 
-public function diplayAddTempltesToScenarioAction(){
-
+public function fetchTeplatesForScenarioAction(){
+    $scenarioName = $this->getEvent()->getRouteMatch()->getParam('scenarioName');
+    $templates = glob("data/scenarios/".$scenarioName."/*");
+	$this->forward()->dispatch('Application\Controller\Elaborat', [
+    'action' => 'displayAddRemoveTemplatesToScenario',
+    'templates' => $data
+]);
+	
 }
 
+public function displayAddRemoveTemplatesToScenarioAction(){
+	
+    $scenarioName = $this->params()->fromQuery('scenarioName');
+        $form  = new AddRemoveTemplatesToScenarioForm($scenarioName);
+		$request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            if (!empty($post)) {
+				$this->forward()->dispatch('Application\Controller\Elaborat', [
+				'action' => 'addRemoveTemplatesToScenario',
+				'templates' => $post['templates'],
+				'scenario-name' => $post['scenario-name']
+				]);
+            } else {
+                throw new Exception('invalid form, please re-fill');
+            }
+        }
+        
+		$filelist = glob("data/scenarios/".$scenarioName."/*");
+		$viewModel = new ViewModel(array('form' => $form));
+		$viewModel->setVariable('filelist', $filelist);
+		$viewModel->setVariable('scenarioName', $scenarioName);
+        
+        return $viewModel;
+}
+
+
+public function addRemoveTemplatesToScenarioAction(){
+	$templates = $this->getEvent()->getRouteMatch()->getParam('templates');
+	$scenario_name = $this->getEvent()->getRouteMatch()->getParam('scenario-name');
+	//var_dump($templates);
+	//var_dump($scenario_name); die();
+	
+	//delete all files in folder for this scenario
+	$files = glob('data/scenarios/'.$scenario_name.'/*'); // get all file names
+	foreach($files as $file){ // iterate files
+		if(is_file($file))
+			unlink($file); // delete file
+	}
+	
+	//copy all selected templates to folder for scenario
+	foreach($templates as $template){ // iterate files
+		if(is_file($template))
+			copy($template,"data/scenarios/".$scenario_name."/".basename($template)); // copy file
+	}
+	
+	$this->redirect()->toRoute(null,
+     array('module'     => 'application',
+            'controller'=>'elaborat'));
+	
+    //return new ViewModel();
+}
+
+public function displayEditScenarioAction(){
+    $filelist = glob("data\scenarios\*", GLOB_ONLYDIR);
+    foreach ($filelist as $key => $value) {
+        $filelist[$key] = iconv(mb_detect_encoding(basename($filelist[$key]), mb_detect_order(), true), "UTF-8", basename($filelist[$key]));
+    }
+    //var_dump($filelist);
+    $viewModel = new ViewModel($filelist);
+    $viewModel->setVariable('filelist', $filelist);
+    
+    return $viewModel;
+}
 
 public function diplaySuccessAction(){
     //$this->forward()->dispatch('Application\Controller\Elaborat');

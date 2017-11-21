@@ -19,7 +19,7 @@ class UploadForm extends Form
     {
         // File Input
         $file = new Element\File('image-file');
-        $file->setLabel('Avatar Image Upload')
+        $file->setLabel('Template Upload')
              ->setAttribute('id', 'image-file');
         $this->add($file);
     }

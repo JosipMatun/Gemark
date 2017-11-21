@@ -7,9 +7,9 @@
 	<h1>Scenariji</h1>
 	 <ul class="list-group">
 	 	<?php
-	 	foreach ($this->filelist as $directory) {
-
-	 		echo '<a href="link"><li class="list-group-item">'.basename($directory).'</li></a>';
+	 	foreach ($this->filelist as $directoryLong) {
+			$directory = basename($directoryLong);
+	 		echo '<a href="'.$_SERVER[REQUEST_URI]."/displayAddRemoveTemplatesToScenario?scenarioName=".$directory.'"><li class="list-group-item">'.$directory.'</li></a>';
 	 	}
 	 	?>
 	</ul>
@@ -17,7 +17,7 @@
 	</br>
 	<a href="<?=$_SERVER[REQUEST_URI]?>/displayCreateScenario">Stvori novi scenarij</a>
 	</br>
-	<a href="<?=$_SERVER[REQUEST_URI]?>/displayEditScenario">Uredi postojeći scenarij</a>
+	<a href="<?=$_SERVER[REQUEST_URI]?>/displayEditScenario">Uredi scenarij</a>
 	</br>
 	<a href="<?=$_SERVER[REQUEST_URI]?>/displayTemplates">Templates</a>
 	</br>
