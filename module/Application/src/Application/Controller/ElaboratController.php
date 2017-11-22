@@ -85,7 +85,7 @@ $objWriter->save('helloWorld.odt');
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
 $objWriter->save('helloWorld.html');
 
-    $filelist = glob("data\scenarios\*", GLOB_ONLYDIR);
+    $filelist = glob("./data/scenarios/*", GLOB_ONLYDIR);
     foreach ($filelist as $key => $value) {
         $filelist[$key] = iconv(mb_detect_encoding(basename($filelist[$key]), mb_detect_order(), true), "UTF-8", basename($filelist[$key]));
     }
@@ -101,12 +101,22 @@ $objWriter->save('helloWorld.html');
 
 // Template processor instance creation
 echo date('H:i:s') , ' Creating new TemplateProcessor instance...';
+$filelist = glob("./data/templates/*");
+//get all variables from all templates
+$allVariables = array();
+foreach ($filelist as $template) {
+	echo 'data\templates\\'.basename($template);
+    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('data\templates\\'.basename($template));
+	$allVariables = array_merge($allVariables,$templateProcessor->getVariables());
+}
+$allVariablesUnique = array_unique($allVariables);
+var_dump($allVariablesUnique);
+
 $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('data\templates\firstTemplate.docx');
 
-$templateProcessor->setValue('CLONEME', 'upisana vrijednost');
-
+$templateProcessor->setValue('kloniraj', 'upisana vrijednost');
+ die();
 $varsFromTemplate = $templateProcessor->getVariables();
-var_dump($varsFromTemplate);
 
 echo date('H:i:s'), ' Saving the result document...';
 $templateProcessor->saveAs('data\done\firstTemplate_replaced.docx');
@@ -216,8 +226,7 @@ public function createScenarioAction(){
     umask($oldmask);
     return $this->redirect()->toRoute(null,
      array('module'     => 'application',
-            'controller'=>'elaborat',
-            'action' => 'displaySuccess'));
+            'controller'=>'elaborat'));
     
 }
 
@@ -285,7 +294,7 @@ public function addRemoveTemplatesToScenarioAction(){
 }
 
 public function displayEditScenarioAction(){
-    $filelist = glob("data\scenarios\*", GLOB_ONLYDIR);
+    $filelist = glob("./data/scenarios/*", GLOB_ONLYDIR);
     foreach ($filelist as $key => $value) {
         $filelist[$key] = iconv(mb_detect_encoding(basename($filelist[$key]), mb_detect_order(), true), "UTF-8", basename($filelist[$key]));
     }
