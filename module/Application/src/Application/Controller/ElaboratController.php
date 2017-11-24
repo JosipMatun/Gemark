@@ -112,7 +112,7 @@ public function displayScenarioInputAction()
 	//get all variables from all templates
 	$allVariables = array();
 	foreach ($filelist as $template) {
-		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('data\templates\\'.basename($template));
+		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('./data/templates/'.basename($template));
 		$allVariables = array_merge($allVariables,$templateProcessor->getVariables());
 	}
 	$allVariablesUnique = array_unique($allVariables);
