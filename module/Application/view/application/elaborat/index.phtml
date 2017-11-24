@@ -1,7 +1,6 @@
 <html>
   <head>
-     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-<h1>Ovo je dio aplikacije za rad s dokumentima</h1>
+     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   </head>
   <body>
 	<h1>Scenariji</h1>
@@ -9,7 +8,7 @@
 	 	<?php
 	 	foreach ($this->filelist as $directoryLong) {
 			$directory = basename($directoryLong);
-	 		echo '<a href="'.$_SERVER[REQUEST_URI]."/displayAddRemoveTemplatesToScenario?scenarioName=".$directory.'"><li class="list-group-item">'.$directory.'</li></a>';
+	 		echo '<a href="'.$_SERVER[REQUEST_URI]."/displayScenarioInput?scenarioName=".$directory.'"><li class="list-group-item">'.$directory.'</li></a>';
 	 	}
 	 	?>
 	</ul>

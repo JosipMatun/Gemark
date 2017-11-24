@@ -1,0 +1,23 @@
+<h1>Unos podataka za scenarij "<?= $this->scenarioName ?>"</h1> 
+</br> 
+<?php
+$form = $this->form;
+$form->setAttribute('action', dirname($_SERVER[REQUEST_URI])."/displayScenarioInput");
+$form->prepare();
+ 
+echo $this->form()->openTag($form);
+foreach ($this->allVariablesUnique as $variable) {
+	echo $variable;
+	echo "</br>";
+	echo $this->formRow($form->get($variable));
+	echo "</br>";
+}
+echo $this->formRow($form->get('scenario-name'));
+	echo "</br>";
+?><button>Submit</button><?php
+echo $this->form()->closeTag();
+?>
+
+	</br>
+	<a href="<?php echo dirname($_SERVER[REQUEST_URI]);?>">Home</a>
+

@@ -14,10 +14,12 @@ use Zend\View\Model\ViewModel;
 
 use Zend\Http\Request;
 use Zend\Filter\File\RenameUpload;
+use Zend\Filter\Compress;
 
 use Application\Form\UploadForm;
 use Application\Form\CreateScenarioForm;
 use Application\Form\AddRemoveTemplatesToScenarioForm;
+use Application\Form\DisplayScenarioInputForm;
 
 class ElaboratController extends AbstractActionController
 {
@@ -96,34 +98,67 @@ $objWriter->save('helloWorld.html');
     return $viewModel;
 }
 
-        public function templateAction()
-    {        
+public function displayScenarioInputAction()
+    {
+		//from URL
+	$scenarioName = $this->params()->fromQuery('scenarioName');
+	if(empty($scenarioName)) {
+		//from hidden form element
+		$request = $this->getRequest();
+        $post = $request->getPost()->toArray();
+		$scenarioName = $post['scenario-name'];
+	}
+	$filelist = glob("./data/scenarios/".$scenarioName."/*");
+	//get all variables from all templates
+	$allVariables = array();
+	foreach ($filelist as $template) {
+		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('data\templates\\'.basename($template));
+		$allVariables = array_merge($allVariables,$templateProcessor->getVariables());
+	}
+	$allVariablesUnique = array_unique($allVariables);
+    $form  = new DisplayScenarioInputForm($allVariablesUnique, $scenarioName);
+	//form data handling
+		$request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            if (!empty($post)) {
+				//var_dump($post); die();
+				//create new directory
+				$newDirectory = $post['scenario-name']."_".date("d-m-Y_H-i-s");
+				$oldmask = umask(0);
+				$folders = glob("./data/done/*", GLOB_ONLYDIR);
+				if(!in_array($post['scenario-name'],$folders)){
+					mkdir("data/done/".$post['scenario-name'], 0777);
+				}
+				mkdir("data/done/".$post['scenario-name']."/".$newDirectory, 0777);
+				umask($oldmask);
+				foreach ($filelist as $template) {
+					$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor("./data/scenarios/".$post['scenario-name']."/".basename($template));
+					foreach ($post as $key => $variableFromPost) {
+						if($key != 'scenario-name'){
+							$templateProcessor->setValue($key, $variableFromPost);							
+						}
+					}
+					$templateProcessor->saveAs('./data/done/'.$post['scenario-name'].'/'.$newDirectory.'/'.basename($template));
+				}
+				
+				$this->forward()->dispatch('Application\Controller\Elaborat', [
+				'action' => 'createZipForDownload',
+				'newDirectory' => $newDirectory,
+				'scenario-name' => $post['scenario-name']
+				]);
+				
+            } else {
+                throw new Exception('invalid form, please re-fill');
+            }
+        }
 
-// Template processor instance creation
-echo date('H:i:s') , ' Creating new TemplateProcessor instance...';
-$filelist = glob("./data/templates/*");
-//get all variables from all templates
-$allVariables = array();
-foreach ($filelist as $template) {
-	echo 'data\templates\\'.basename($template);
-    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('data\templates\\'.basename($template));
-	$allVariables = array_merge($allVariables,$templateProcessor->getVariables());
-}
-$allVariablesUnique = array_unique($allVariables);
-var_dump($allVariablesUnique);
 
-$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('data\templates\firstTemplate.docx');
-
-$templateProcessor->setValue('kloniraj', 'upisana vrijednost');
- die();
-$varsFromTemplate = $templateProcessor->getVariables();
-
-echo date('H:i:s'), ' Saving the result document...';
-$templateProcessor->saveAs('data\done\firstTemplate_replaced.docx');
-//var_dump($templateProcessor);
-
-
-    	return new ViewModel();
+		$viewModel = new ViewModel(array('form' => $form));
+		$viewModel->setVariable('allVariablesUnique', $allVariablesUnique);
+		$viewModel->setVariable('scenarioName', $scenarioName);
+        
+        return $viewModel;
     }
 
 public function uploadFormAction()
@@ -301,6 +336,38 @@ public function displayEditScenarioAction(){
     //var_dump($filelist);
     $viewModel = new ViewModel($filelist);
     $viewModel->setVariable('filelist', $filelist);
+    
+    return $viewModel;
+}
+
+public function createZipForDownloadAction(){
+	$newDirectory = $this->getEvent()->getRouteMatch()->getParam('newDirectory');
+	$scenario_name = $this->getEvent()->getRouteMatch()->getParam('scenario-name');
+
+	$filter = new Compress(array(
+    'adapter' => 'Zip',
+    'options' => array(
+        'archive' => "./data/done/".$scenario_name."/".$newDirectory.".zip"
+    ),
+	));
+	$compressed = $filter->filter("./data/done/".$scenario_name."/".$newDirectory);
+		
+	$this->redirect()->toRoute(null,
+     array('module'     => 'application',
+            'controller'=>'elaborat',
+			'action'=>'downloadZip'),
+    array( 'query' => array(
+        'newDirectory' => $newDirectory,
+		'scenario_name' => $scenario_name
+    )));
+}
+
+public function downloadZipAction(){
+	$newDirectory = $this->params()->fromQuery('newDirectory',null);
+	$scenario_name = $this->params()->fromQuery('scenario_name',null);
+    $viewModel = new ViewModel();
+    $viewModel->setVariable('newDirectory', $newDirectory);
+    $viewModel->setVariable('scenario_name', $scenario_name);
     
     return $viewModel;
 }
