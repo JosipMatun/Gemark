@@ -1,0 +1,44 @@
+<html>
+	<body>
+		<table>
+			<tr>
+				<td style="padding-right: 4em; display: inline-block;">
+					<div>
+					<h2>Vrsta elaborata:</h2>
+					<?php
+					$form = $this->form;
+					$form->setAttribute('action', dirname($_SERVER[REQUEST_URI])."/displayScenarioInput");
+					$form->prepare();
+					
+					echo $this->form()->openTag($form);
+					echo $this->formRow($form->get('usernames'));
+						echo "</br>";
+					echo $this->form()->closeTag();
+					?>
+					</div>
+					<div>
+					<h2>Sastavni dijelovi:</h2>
+					<form action="/action_page.php">
+						<input type="checkbox" name="sadrzaj-1" value="sadrzaj-1" checked> 1. Naslovna stranica<br>
+						<input type="checkbox" name="sadrzaj-2" value="sadrzaj-2" checked> 2. Skica izmjere<br>
+						<input type="checkbox" name="sadrzaj-3" value="sadrzaj-3" checked> 3. popis koordinata<br>
+						<input type="checkbox" name="sadrzaj-4" value="sadrzaj-4" checked> 4. prikaz izmjerenog stanja ili situacija<br>
+						<input type="checkbox" name="sadrzaj-5" value="sadrzaj-5" checked> 5. iskaz površina<br>
+						<input type="checkbox" name="sadrzaj-6" value="sadrzaj-6" checked> 6. prijavni list za katastar<br>
+						<input type="checkbox" name="sadrzaj-7" value="sadrzaj-7" checked> 7. kopija katastarskog plana za katastar<br>
+						<input type="checkbox" name="sadrzaj-8" value="sadrzaj-8" checked> 8. izvješća o izrađenom elaboratu<br>
+						<input style="margin-left: 1em;" type="checkbox" name="sadrzaj-8-1" value="sadrzaj-8-1" checked> 8.1 tehničko izvješće<br>
+						<input style="margin-left: 1em;" type="checkbox" name="sadrzaj-8-2" value="sadrzaj-8-2" checked> 8.2 izvješće o zgradama i drugim građevinama<br>
+						<input style="margin-left: 1em;" type="checkbox" name="sadrzaj-8-3" value="sadrzaj-8-3" checked> 8.3 izvješće o međama i drugim zgradama te o novom razgraničenju<br>
+						<input type="checkbox" name="sadrzaj-9" value="sadrzaj-9" checked> 9. prijavni list za katastar<br>
+						<input type="checkbox" name="sadrzaj-10" value="sadrzaj-10" checked> 10. kopija katastarskog plana za katastar<br>
+					</form>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
+
+
+ 

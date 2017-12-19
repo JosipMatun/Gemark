@@ -20,6 +20,7 @@ use Application\Form\UploadForm;
 use Application\Form\CreateScenarioForm;
 use Application\Form\AddRemoveTemplatesToScenarioForm;
 use Application\Form\DisplayScenarioInputForm;
+use Application\Form\VrstaElaborataInputForm;
 
 class ElaboratController extends AbstractActionController
 {
@@ -373,6 +374,77 @@ public function downloadZipAction(){
 }
 
 public function diplaySuccessAction(){
+    //$this->forward()->dispatch('Application\Controller\Elaborat');
+    return new ViewModel();
+}
+
+public function vrstaElaborataInputAction()
+    {
+
+    $form  = new VrstaElaborataInputForm();
+	//form data handling
+		$request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+			var_dump($post);
+            if (!empty($post)) {
+				switch ($post['step_number']) {
+					case "1":
+						$this->redirect()->toRoute(null,
+							array('module'     => 'application',
+								'controller'=>'elaborat',
+								'action'=>'stepOneDisplay'));
+						break;
+					case "2":
+							$this->redirect()->toRoute(null,
+							array('module'     => 'application',
+								'controller'=>'elaborat',
+								'action'=>'stepTwoDisplay'));
+						break;
+					case "3":
+						$this->redirect()->toRoute(null,
+							array('module'     => 'application',
+								'controller'=>'elaborat',
+								'action'=>'stepThreeDisplay'));
+						break;
+					case "4":
+						$this->redirect()->toRoute(null,
+							array('module'     => 'application',
+								'controller'=>'elaborat',
+								'action'=>'stepFourDisplay'));
+						break;
+					default:
+						echo "";
+				}
+            } else {
+                throw new Exception('invalid form, please re-fill');
+            }
+        }
+
+
+		$viewModel = new ViewModel(array('form' => $form));
+        
+        return $viewModel;
+    }
+	
+	
+public function stepOneDisplayAction(){
+    $form  = new VrstaElaborataInputForm();
+	$viewModel = new ViewModel(array('form' => $form));       
+    return $viewModel;
+}
+	
+public function stepTwoDisplayAction(){
+    //$this->forward()->dispatch('Application\Controller\Elaborat');
+    return new ViewModel();
+}
+	
+public function stepThreeDisplayAction(){
+    //$this->forward()->dispatch('Application\Controller\Elaborat');
+    return new ViewModel();
+}
+	
+public function stepFourDisplayAction(){
     //$this->forward()->dispatch('Application\Controller\Elaborat');
     return new ViewModel();
 }

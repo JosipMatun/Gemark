@@ -1,23 +1,121 @@
-<h1>Unos podataka za scenarij "<?= $this->scenarioName ?>"</h1> 
-</br> 
+<a href="<?php echo dirname($_SERVER[REQUEST_URI]);?>">Home</a>
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Smart Wizard 2 - Ajax Contents Example - a javascript jQuery wizard control plugin</title>
+
 <?php
-$form = $this->form;
-$form->setAttribute('action', dirname($_SERVER[REQUEST_URI])."/displayScenarioInput");
-$form->prepare();
- 
-echo $this->form()->openTag($form);
-foreach ($this->allVariablesUnique as $variable) {
-	echo $variable;
-	echo "</br>";
-	echo $this->formRow($form->get($variable));
-	echo "</br>";
-}
-echo $this->formRow($form->get('scenario-name'));
-	echo "</br>";
-?><button>Submit</button><?php
-echo $this->form()->closeTag();
+echo $this->headLink()
+	->prependStylesheet($this->basePath() . '/gemark-work/public/styles/demo_style.css')
+	->prependStylesheet($this->basePath() . '/gemark-work/public/styles/smart_wizard_vertical.css');
+
+echo $this->headScript()
+        ->prependFile($this->basePath() . '/gemark-work/public/js/jquery.smartWizard.js')
+        ->prependFile($this->basePath() . '/gemark-work/public/js/jquery-2.0.0.min.js');
 ?>
 
-	</br>
-	<a href="<?php echo dirname($_SERVER[REQUEST_URI]);?>">Home</a>
+<script type="text/javascript">
+    $(document).ready(function(){
+    	// Smart Wizard    	
+  		$('#wizard').smartWizard({contentURL:'<?php echo dirname($_SERVER[REQUEST_URI]).'/vrstaElaborataInput'; ?>',transitionEffect:'slideleft',onFinish:onFinishCallback});
+      
+      function onFinishCallback(){
+        alert('Finish Called');
+      }     
+		});
+</script>
+</head><body>
 
+<div class="demoHead">   
+  <h2>Izrada elaborata</h2> 
+</div>
+
+<table align="center" border="0" cellpadding="0" cellspacing="0">
+<tr><td> 
+<!-- Smart Wizard -->
+  		<div id="wizard" class="swMain" style="height: 500px !important;  position: relative;">
+  			<ul>
+  				<li><a href="#step-1">
+                <label class="stepNumber">1</label>
+                <span class="stepDesc">
+                   <small>Vrsta elaborata i sastavni dijelovi</small>
+                </span>
+            </a></li>
+  				<li><a href="#step-2">
+                <label class="stepNumber">2</label>
+                <span class="stepDesc">
+                   <small>Ulazni podatci</small>
+                </span>
+            </a></li>
+  				<li><a href="#step-3">
+                <label class="stepNumber">3</label>
+                <span class="stepDesc">
+                   <small>Popis koordinata</small>
+                </span>                   
+             </a></li>
+  				<li><a href="#step-4">
+                <label class="stepNumber">4</label>
+                <span class="stepDesc">
+                   <small>Prijavni list za katastar</small>
+                </span>                   
+            </a></li>
+  			</ul>
+  			<div id="step-1">	
+            <h2 class="StepTitle">Step 1 Content</h2>
+            <ul type="disk">
+  				    <li>List 1</li>
+  				    <li>List 2</li>
+            </ul>
+            <p>
+			opis 1
+            </p>
+            <p>
+            opis 2
+            </p>
+            <p>
+            opis 3
+            </p>          			
+        </div>
+  			<div id="step-2">
+            <h2 class="StepTitle">Step 2 Content</h2>	
+            <p>
+			opis 4
+            </p>
+            <p>
+			opis 5
+            </p>
+            <p>
+			opis 6
+            </p> 
+            <p>
+            opis 7
+            </p>          
+        </div>                      
+  			<div id="step-3">
+            <h2 class="StepTitle">Step 3 Content</h2>	
+            <p>
+			opis 8
+            </p>
+            <p>
+            opis 9
+            </p>               				          
+        </div>
+  			<div id="step-4">
+            <h2 class="StepTitle">Step 4 Content</h2>	
+            <p>
+			opis 10
+            </p>
+            <p>
+            opis 11
+            </p>
+            <p>
+            opis 12
+            </p>                			
+        </div>
+  		</div>
+<!-- End SmartWizard Content -->  		
+
+</td></tr>
+</table>  		
+</body>
+</html>
