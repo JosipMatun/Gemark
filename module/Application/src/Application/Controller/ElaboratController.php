@@ -21,10 +21,13 @@ use Application\Form\CreateScenarioForm;
 use Application\Form\AddRemoveTemplatesToScenarioForm;
 use Application\Form\DisplayScenarioInputForm;
 use Application\Form\VrstaElaborataInputForm;
+use Application\Form\ElaboratDefinitionDisplayForm;
 
 class ElaboratController extends AbstractActionController
 {
-    public function indexAction()
+	protected $elaboratTable;
+	
+public function indexAction()
     {
     	// Creating the new document...
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
@@ -449,4 +452,48 @@ public function stepFourDisplayAction(){
     return new ViewModel();
 }
 
+
+public function elaboratDefinitionDisplayAction()
+    {
+
+    $form  = new elaboratDefinitionDisplayForm();
+	//form data handling
+		$request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            if (!empty($post)) {
+				die('Forma je submitana!');
+				$this->forward()->dispatch('Application\Controller\Elaborat', [
+				'action' => 'createZipForDownload',
+				'newDirectory' => $newDirectory,
+				'scenario-name' => $post['scenario-name']
+				]);
+				
+            } else {
+                throw new Exception('invalid form, please re-fill');
+            }
+        }
+
+
+		$viewModel = new ViewModel(array('form' => $form));
+        
+        return $viewModel;
+    }
+
+	public function getElaboratTable()
+     {
+         if (empty($this->elaboratTable)) {
+             $sm = $this->getServiceLocator();
+             $this->elaboratTable = $sm->get('Application\Model\ElaboratTable');
+         }
+         return $this->elaboratTable;
+     }
+	 
+	public function dohvatiAction()
+     {
+         return new ViewModel(array(
+             'albums' => $this->getElaboratTable()->fetchAll(),
+         ));
+     }
+	
 }

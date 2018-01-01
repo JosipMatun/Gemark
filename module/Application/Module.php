@@ -12,6 +12,11 @@ namespace Application;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
+use Application\Model\Elaborat;
+use Application\Model\ElaboratTable;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -36,4 +41,25 @@ class Module
             ),
         );
     }
+	
+	public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Application\Model\ElaboratTable' =>  function($sm) {
+                    $tableGateway = $sm->get('ElaboratTableGateway');
+                    $table = new ElaboratTable($tableGateway);
+                    return $table;
+                },
+                'ElaboratTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Elaborat());
+                    return new TableGateway('elaborat', $dbAdapter, null, $resultSetPrototype);
+                },
+            ),
+        );
+    }
+
+	
 }
