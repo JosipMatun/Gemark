@@ -7,7 +7,7 @@
 					<h2>Vrsta elaborata:</h2>
 					<?php
 					$form = $this->form;
-					$form->setAttribute('action', dirname($_SERVER[REQUEST_URI])."/displayScenarioInput");
+					$form->setAttribute('action', dirname($_SERVER['REQUEST_URI'])."/displayScenarioInput");
 					$form->prepare();
 					
 					echo $this->form()->openTag($form);

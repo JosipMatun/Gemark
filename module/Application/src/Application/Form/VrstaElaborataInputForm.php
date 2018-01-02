@@ -7,7 +7,7 @@ class VrstaElaborataInputForm extends Form{
     
     public function __construct() {
          
-        parent::__construct($name);
+        parent::__construct();
 		
 		$this->add(array(     
 		'type' => 'Zend\Form\Element\Select',       

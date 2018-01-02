@@ -20,7 +20,6 @@ function SmartWizard(target, options) {
     this.msgBox = $('<div class="msgBox"><div class="content"></div><a href="#" class="close">X</a></div>');
     this.elmStepContainer = $('<div></div>').addClass("stepContainer");
     this.loader = $('<div>Loading</div>').addClass("loader");
-	debugger;
     this.buttons = {
         cancel : $('<a>'+options.labelNext+'</a>').attr("href","#").addClass("buttonNext"),
         next : $('<a>'+options.labelNext+'</a>').attr("href","#").addClass("buttonNext"),

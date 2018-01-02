@@ -29,6 +29,7 @@ class ElaboratController extends AbstractActionController
 	
 public function indexAction()
     {
+		phpinfo();
     	// Creating the new document...
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
@@ -389,7 +390,6 @@ public function vrstaElaborataInputAction()
 		$request = $this->getRequest();
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
-			var_dump($post);
             if (!empty($post)) {
 				switch ($post['step_number']) {
 					case "1":
