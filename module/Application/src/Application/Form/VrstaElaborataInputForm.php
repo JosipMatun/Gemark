@@ -27,7 +27,17 @@ class VrstaElaborataInputForm extends Form{
 				'elaborat-10' => '10. ostalo',
 			),
 		),
-	)); 
+		));		
+		
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'ostalo-ime-elaborata',
+		'attributes' =>  array(
+			'id' => 'ostalo-ime-elaborata',
+			'placeholder' => 'Upišite ime elaborata',
+			'style' => 'display: none;'
+		)
+		)); 
 
     }    
 }

@@ -1,4 +1,18 @@
 <html>
+	<head>
+	<script type="text/javascript">
+    $(document).ready(function(){ 	
+  		var el = document.getElementById('usernames');
+		el.onchange = function(e){
+			if (e.currentTarget.value === "elaborat-10") {
+				document.getElementById('ostalo-ime-elaborata').style.display = 'block';
+			} else {
+				document.getElementById('ostalo-ime-elaborata').style.display = 'none';
+			}
+		};
+		});
+	</script>
+	</head>
 	<body>
 		<table>
 			<tr>
@@ -12,7 +26,8 @@
 					
 					echo $this->form()->openTag($form);
 					echo $this->formRow($form->get('usernames'));
-						echo "</br>";
+						echo "</br>";						
+					echo $this->formRow($form->get('ostalo-ime-elaborata'));
 					echo $this->form()->closeTag();
 					?>
 					</div>

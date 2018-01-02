@@ -9,6 +9,8 @@
 
 namespace Application\Controller;
 
+use Zend\Session\Container;
+
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -29,7 +31,6 @@ class ElaboratController extends AbstractActionController
 	
 public function indexAction()
     {
-		phpinfo();
     	// Creating the new document...
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
@@ -456,6 +457,15 @@ public function stepFourDisplayAction(){
 public function elaboratDefinitionDisplayAction()
     {
 
+	//generate elaboratID and store it to session
+	$t = microtime(true);
+	$micro = sprintf("%06d",($t - floor($t)) * 1000000);
+	$d = new \DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
+	$elaboratID = $d->format("YmdHisu"); // note at point on "u"
+
+	$session = new Container('base');
+	$session->offsetSet('elaboratID', $elaboratID);	
+	
     $form  = new elaboratDefinitionDisplayForm();
 	//form data handling
 		$request = $this->getRequest();
