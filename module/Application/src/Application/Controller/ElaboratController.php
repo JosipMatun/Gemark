@@ -505,11 +505,104 @@ public function elaboratDefinitionDisplayAction()
 
 
     public function elaboratSubmitHandlerAction(){
-        //from hidden form element
+        //all data about elaborat from post
         $request = $this->getRequest();
         $post = $request->getPost()->toArray();
-        var_dump($post); die();
+
+        if (!empty($post['usernames'])) {
+            switch ($post['usernames']) {
+                case "elaborat-1":
+                    $tipElaborata = 'Diobe ili spajanja katastarskih čestica';
+                    break;
+                case "elaborat-2":
+                    $tipElaborata = 'Provedbe dokumenata ili akata prostornog uređenja';
+                    break;
+                case "elaborat-3":
+                    $tipElaborata = 'Evidentiranja pomorskog ili vodnog dobra';
+                    break;
+                case "elaborat-4":
+                    $tipElaborata = 'Evidentiranja, brisanja ili promjene podataka o zgradama ili drugim građevinama';
+                    break;
+                case "elaborat-5":
+                    $tipElaborata = 'Evidentiranja ili promjene podataka o načinu uporabe katastarskih čestica';
+                    break;
+                case "elaborat-6":
+                    $tipElaborata = 'Evidentiranja stvarnog položaja pojedinačnih već evidentiranih katastarskih čestica';
+                    break;
+                case "elaborat-7":
+                    $tipElaborata = 'Evidentiranja međa uređenih u posebnome postupku';
+                    break;
+                case "elaborat-8":
+                    $tipElaborata = 'Provedbe u zemljišnoj knjizi';
+                    break;
+                case "elaborat-9":
+                    $tipElaborata = 'izmjere postojećeg stanja radi ispravljanja zemljišne knjige';
+                    break;
+                case "elaborat-10":
+                    $tipElaborata = $post['ostalo-ime-elaborata'];
+                    break;
+                default:
+                    var_dump($post);
+                    die();
+            }
+        //poziv worda            
+            //create new directory
+            $oldmask = umask(0);
+            $folders = glob("./data/done/*", GLOB_ONLYDIR);
+            if(!in_array($post['elaboratID'],$folders)){
+                mkdir("data/done/".$post['elaboratID'], 0777);
+            }
+            umask($oldmask);
+        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'Naslovna_stranica_template.docx');
+        $templateProcessor->setValue('TIP_ELABORATA', $tipElaborata);
+        $pathToOutputFile = './data/done/'.$post['elaboratID'].'/'.'Naslovna_stranica.docx';
+        $templateProcessor->saveAs($pathToOutputFile);
+
+        //generate zip with all documents
+        $filter = new Compress(array(
+        'adapter' => 'Zip',
+        'options' => array(
+            'archive' => "./data/done/".$post['elaboratID'].".zip"
+        ),
+        ));
+        $compressed = $filter->filter("./data/done/".$post['elaboratID']);
+
+            //render view with parameters
+        $viewModel = new ViewModel();
+        $viewModel->setVariable('zip', $post['elaboratID'].".zip");
+        return $viewModel;
+
+        }
     }
+
+    public function downloadAction() {
+        $fileName = $this->params()->fromQuery('zip');
+        $name = $fileName;
+
+        $response = new \Zend\Http\Response\Stream();
+        
+        // Opens the string as a Stream
+        $stream = fopen('./data/done/'.$name,'r');
+        
+        // Get statistics about the stream, extract size
+        $stats  = fstat($stream);
+        
+        $response->setStream($stream);
+        $response->setStatusCode(200);
+        $response->setStreamName($name);
+        $headers = new \Zend\Http\Headers();
+        $headers->addHeaders(array(
+            'Content-Disposition' => 'attachment; filename="'.$name.'"',
+            'Content-Type' => 'application/octet-stream',
+            'Content-Length' => $stats['size'],
+            'Expires' => '@0', // @0, because zf2 parses date as string to \DateTime() object
+            'Cache-Control' => 'must-revalidate',
+            'Pragma' => 'public'
+        ));
+        $response->setHeaders($headers);
+    return $response;
+    }
+
 
 	
 }

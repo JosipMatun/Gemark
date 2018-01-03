@@ -51,7 +51,8 @@ echo $this->headScript()
   $session->offsetSet('elaboratID', $elaboratID);
 
 
- ?> 
+ ?>
+ <input type="text" name="elaboratID" id="elaboratID" style="display: none;" value="<?php echo $session->offsetGet('elaboratID', $elaboratID); ?>">
 <!-- Smart Wizard -->
   		<div id="wizard" class="swMain" style="height: 500px !important;  position: relative;">
   			<ul>
