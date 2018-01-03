@@ -4,6 +4,9 @@
 <title>Smart Wizard 2 - Ajax Contents Example - a javascript jQuery wizard control plugin</title>
 
 <?php
+
+use Zend\Session\Container;
+
 echo $this->headLink()
 	->prependStylesheet($this->basePath() . '/gemark-work/public/styles/demo_style.css')
 	->prependStylesheet($this->basePath() . '/gemark-work/public/styles/smart_wizard_vertical.css');
@@ -36,7 +39,19 @@ echo $this->headScript()
   $form->setAttribute('action',"./elaboratSubmitHandler");
   $form->prepare();
   echo $this->form()->openTag($form);
-  ?>
+  
+
+  //generate elaboratID and store it to session
+  $t = microtime(true);
+  $micro = sprintf("%06d",($t - floor($t)) * 1000000);
+  $d = new \DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
+  $elaboratID = $d->format("YmdHisu"); // note at point on "u"
+
+  $session = new Container('base');
+  $session->offsetSet('elaboratID', $elaboratID);
+
+
+ ?> 
 <!-- Smart Wizard -->
   		<div id="wizard" class="swMain" style="height: 500px !important;  position: relative;">
   			<ul>
