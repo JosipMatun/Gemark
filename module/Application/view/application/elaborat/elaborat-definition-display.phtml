@@ -19,7 +19,8 @@ echo $this->headScript()
   		$('#wizard').smartWizard({contentURL:'<?php echo dirname($_SERVER[REQUEST_URI]).'/vrstaElaborataInput'; ?>',transitionEffect:'slideleft',onFinish:onFinishCallback});
       
       function onFinishCallback(){
-        alert('Finish Called');
+        debugger
+        $('form').submit();
       }     
 		});
 </script>
@@ -29,7 +30,13 @@ echo $this->headScript()
   <h2>Izrada elaborata</h2> 
 </div>
 <table align="center" border="0" cellpadding="0" cellspacing="0">
-<tr><td> 
+<tr><td>
+  <?php
+  $form = $this->form;
+  $form->setAttribute('action',"./elaboratSubmitHandler");
+  $form->prepare();
+  echo $this->form()->openTag($form);
+  ?>
 <!-- Smart Wizard -->
   		<div id="wizard" class="swMain" style="height: 500px !important;  position: relative;">
   			<ul>
@@ -111,14 +118,14 @@ echo $this->headScript()
             </p>                			
         </div>
   		</div>
-<!-- End SmartWizard Content -->  		
+<!-- End SmartWizard Content -->
+
+<?php echo $this->form()->closeTag(); ?>
 
 </td></tr>
 </table>
 <div>
-<form style="display: inline" action="<?php echo dirname($_SERVER[REQUEST_URI]);?>" method="get">
   <button>Home</button>
-</form>
 </div>	
 </body>
 </html>

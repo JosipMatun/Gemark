@@ -1,7 +1,35 @@
 <html>
+	<head>
+	<script type="text/javascript">
+    $(document).ready(function(){ 	
+  		var el = document.getElementById('usernames');
+		el.onchange = function(e){
+			if (e.currentTarget.value === "elaborat-10") {
+				document.getElementById('ostalo-ime-elaborata').style.display = 'block';
+			} else {
+				document.getElementById('ostalo-ime-elaborata').style.display = 'none';
+			}
+		};
+		});
+	</script>
+	</head>
 	<body>
 		<table>
-			<h2>Cetvrti dio</h2>
+			<tr>
+				<td style="padding-right: 4em; display: inline-block;">
+					<div>
+					<h2>Drugi dio:</h2>
+					<?php
+					$form = $this->form;
+					$form->prepare();
+					
+					echo $this->formRow($form->get('katastar1'));
+						echo "</br>";						
+					echo $this->formRow($form->get('katastar2'));
+					?>
+					</div>
+				</td>
+			</tr>
 		</table>
 	</body>
 </html>

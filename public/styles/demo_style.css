@@ -1,5 +1,6 @@
 body {
   background-image: url("../img/top-background.svg");
+  background-size: contain;
   margin:0;
   padding:0;      
 }

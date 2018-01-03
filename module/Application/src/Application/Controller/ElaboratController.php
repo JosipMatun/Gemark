@@ -24,6 +24,8 @@ use Application\Form\AddRemoveTemplatesToScenarioForm;
 use Application\Form\DisplayScenarioInputForm;
 use Application\Form\VrstaElaborataInputForm;
 use Application\Form\ElaboratDefinitionDisplayForm;
+use Application\Form\UlazniPodaciInputForm;
+use Application\Form\PrijavniListZaKatastarInputForm;
 
 class ElaboratController extends AbstractActionController
 {
@@ -418,7 +420,8 @@ public function vrstaElaborataInputAction()
 								'action'=>'stepFourDisplay'));
 						break;
 					default:
-						echo "";
+						var_dump($post);
+						die();
 				}
             } else {
                 throw new Exception('invalid form, please re-fill');
@@ -439,8 +442,9 @@ public function stepOneDisplayAction(){
 }
 	
 public function stepTwoDisplayAction(){
-    //$this->forward()->dispatch('Application\Controller\Elaborat');
-    return new ViewModel();
+    $form  = new UlazniPodaciInputForm();
+    $viewModel = new ViewModel(array('form' => $form));       
+    return $viewModel;
 }
 	
 public function stepThreeDisplayAction(){
@@ -449,8 +453,9 @@ public function stepThreeDisplayAction(){
 }
 	
 public function stepFourDisplayAction(){
-    //$this->forward()->dispatch('Application\Controller\Elaborat');
-    return new ViewModel();
+    $form  = new PrijavniListZaKatastarInputForm();
+    $viewModel = new ViewModel(array('form' => $form));       
+    return $viewModel;
 }
 
 
@@ -505,5 +510,14 @@ public function elaboratDefinitionDisplayAction()
              'albums' => $this->getElaboratTable()->fetchAll(),
          ));
      }
+
+
+    public function elaboratSubmitHandlerAction(){
+        //from hidden form element
+        $request = $this->getRequest();
+        $post = $request->getPost()->toArray();
+        var_dump($post); die();
+    }
+
 	
 }
