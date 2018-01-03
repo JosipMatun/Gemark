@@ -1,0 +1,11 @@
+<h2>Sastavni dijelovi:</h2>
+
+<?php foreach ($element->getValueOptions() as $key => $value): ?>
+    <input type="checkbox"
+    name="<?php echo $element->getName() ?>[]"
+    id="<?php echo $value['value']; ?>"
+    value="<?php echo $value['value']; ?>"
+    checked="checked"
+    style="<?php echo $value['attributes']['style']; ?>">
+    <span><?php echo $value['label']; ?></span><br/>
+<?php endforeach; ?>
