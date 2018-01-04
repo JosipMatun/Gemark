@@ -554,7 +554,37 @@ public function elaboratDefinitionDisplayAction()
             }
             umask($oldmask);
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'Naslovna_stranica_template.docx');
-        $templateProcessor->setValue('TIP_ELABORATA', $tipElaborata);
+
+        //set all template variables to empty
+        $allVariables = array();
+        $allVariables = array_merge($allVariables,$templateProcessor->getVariables());
+        $allVariablesUnique = array_unique($allVariables);
+        $allVariablesUniqueFliped = array_flip($allVariablesUnique);
+        $variables = array_fill_keys(array_keys($allVariablesUniqueFliped), '');
+
+        //varables mapping
+        $variables['TIP_ELABORATA'] = $tipElaborata;
+
+        if (in_array('sadrzaj-8-1',$post['sastavni-dijelovi'])) {
+            $variables['TEHNICKO_IZVJESCE'] = 'Tehničko izvješće';
+        }
+        if (in_array('sadrzaj-8-2',$post['sastavni-dijelovi'])) {
+            $variables['IZVJESCE_O_ZGRADAMA'] = 'Izvješće o zgradama i drugim građevinama';
+        }
+        if (in_array('sadrzaj-8-3',$post['sastavni-dijelovi'])) {
+            $variables['IZVJESCE_O_MEDAMA'] = 'Izvješće o međama i drugim zgradama te o novom razgraničenju';
+        }
+        if (in_array('sadrzaj-9',$post['sastavni-dijelovi'])) {
+            $variables['KOPIJA_PLANA'] = 'Prijavni list za katastar';
+        }
+        if (in_array('sadrzaj-10',$post['sastavni-dijelovi'])) {
+            $variables['PRIJAVNI_LIST'] = 'Kopija katastarskog plana za katastar';
+        }
+
+        //setting values in template
+        $templateProcessor->setValue($allVariablesUnique,$variables);
+
+        //save as new document
         $pathToOutputFile = './data/done/'.$post['elaboratID'].'/'.'Naslovna_stranica.docx';
         $templateProcessor->saveAs($pathToOutputFile);
 
@@ -567,7 +597,7 @@ public function elaboratDefinitionDisplayAction()
         ));
         $compressed = $filter->filter("./data/done/".$post['elaboratID']);
 
-            //render view with parameters
+        //render view with parameters
         $viewModel = new ViewModel();
         $viewModel->setVariable('zip', $post['elaboratID'].".zip");
         return $viewModel;
