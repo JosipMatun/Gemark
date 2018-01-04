@@ -564,7 +564,9 @@ public function elaboratDefinitionDisplayAction()
 
         //varables mapping
         $variables['TIP_ELABORATA'] = $tipElaborata;
-
+        $variables['DATUM'] = date("d.m.Y");
+        $variables['OZNAKA_ELABORATA'] = $post['oznakaElaborata'];
+        $variables['KATASTARSKA_O'] = $post['KATASTARSKA_O'];
         if (in_array('sadrzaj-8-1',$post['sastavni-dijelovi'])) {
             $variables['TEHNICKO_IZVJESCE'] = 'Tehničko izvješće';
         }
@@ -580,6 +582,77 @@ public function elaboratDefinitionDisplayAction()
         if (in_array('sadrzaj-10',$post['sastavni-dijelovi'])) {
             $variables['PRIJAVNI_LIST'] = 'Kopija katastarskog plana za katastar';
         }
+        $imeArray = array();
+        foreach($post as $key=>$value){
+          if("ime" == substr($key,0,3)){
+            $imeArray[] = $value;
+          }
+        }
+        $prezimeArray = array();
+        foreach($post as $key=>$value){
+          if("prezime" == substr($key,0,7)){
+            $prezimeArray[] = $value;
+          }
+        }
+        $adresaArray = array();
+        foreach($post as $key=>$value){
+          if("adresa" == substr($key,0,6)){
+            $adresaArray[] = $value;
+          }
+        }
+        $OIBArray = array();
+        foreach($post as $key=>$value){
+          if("OIB" == substr($key,0,3)){
+            $OIBArray[] = $value;
+          }
+        }
+
+        $brojNarucitelja = count($imeArray);
+        $NARUCITELJI = '';
+        for ($i=0; $i < $brojNarucitelja; $i++) {
+            if (!empty($imeArray[$i])) {
+                $NARUCITELJI = $NARUCITELJI.$imeArray[$i].' ';
+            }
+            if (!empty($prezimeArray[$i])) {
+                $NARUCITELJI = $NARUCITELJI.$prezimeArray[$i].', ';
+            }
+            if (!empty($adresaArray[$i])) {
+                $NARUCITELJI = $NARUCITELJI.$adresaArray[$i].', ';
+            }
+            if (!empty($OIBArray[$i])) {
+                $NARUCITELJI = $NARUCITELJI.$OIBArray[$i].',';
+            }
+            // replace last occ of ',' with '<w:br/>'
+            $pos = strrpos($NARUCITELJI, ',');
+            if($pos !== false)
+            {
+                $NARUCITELJI = substr_replace($NARUCITELJI, '<w:br/>', $pos, strlen(','));
+            }
+        }
+        $variables['NARUCITELJI'] = $NARUCITELJI;
+
+        $cesticeArray = array();
+        foreach($post as $key=>$value){
+          if("brojKatCes" == substr($key,0,10)){
+            $cesticeArray[] = $value;
+          }
+        }
+        $brojCestica = count($cesticeArray);
+        $KATASTARSKA_C = '';
+        for ($i=0; $i < $brojCestica; $i++) {
+            if (!empty($cesticeArray[$i])) {
+                $KATASTARSKA_C = $KATASTARSKA_C.$cesticeArray[$i].', ';
+            }
+        }
+        // replace last occ of ', ' with ', '
+        $pos = strrpos($KATASTARSKA_C, ', ');
+        if($pos !== false)
+        {
+            $KATASTARSKA_C = substr_replace($KATASTARSKA_C, ' ', $pos, strlen(', '));
+        }
+        $variables['KATASTARSKA_C'] = $KATASTARSKA_C;
+
+        //var_dump($NARUCITELJI); die();
 
         //setting values in template
         $templateProcessor->setValue($allVariablesUnique,$variables);

@@ -8,7 +8,15 @@ class UlazniPodaciInputForm extends Form{
     public function __construct() {
          
         parent::__construct();	
-		
+				
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'oznakaElaborata',
+		'attributes' =>  array(
+			'id' => 'oznakaElaborata',
+			'placeholder' => 'Oznaka elaborata'
+		)
+		));	
 		$this->add(array(     
 		'type' => 'Zend\Form\Element\Text',       
 		'name' => 'podrucniUred',
