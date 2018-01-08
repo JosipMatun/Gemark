@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<h2>Predmetni ulazni podatci</h2>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script>
 			$(document).ready(function() {
@@ -158,20 +159,6 @@
 						</div>
 					</div>
 
-					<div class="container2" style="margin-top: 25px; margin-right: 50px; float: left; width: 25%;">
-						<button class="add_form_field_2">Dodaj česticu &nbsp;
-							<span style="font-size:16px; font-weight:bold;">+ </span>
-						</button>
-						<div id=brojKatCes1>
-						<h3 style="display: inline-block;">Čestica 1:</h3>
-							<?php
-							$form = $this->form;
-							$form->prepare();
-							
-							echo $this->formRow($form->get('brojKatCes1'));
-							?>
-						</div>
-					</div>
 
 					<div class="container3" style="margin-top: 25px; margin-right: 50px; float: left; width: 25%;">
 						<button class="add_form_field_3">Dodaj dokument &nbsp;

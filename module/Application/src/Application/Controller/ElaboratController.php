@@ -448,12 +448,13 @@ public function stepTwoDisplayAction(){
 }
 	
 public function stepThreeDisplayAction(){
-    //$this->forward()->dispatch('Application\Controller\Elaborat');
-    return new ViewModel();
+    $form  = new UlazniPodaciInputForm();
+    $viewModel = new ViewModel(array('form' => $form));       
+    return $viewModel;
 }
 	
 public function stepFourDisplayAction(){
-    $form  = new PrijavniListZaKatastarInputForm();
+    $form  = new UlazniPodaciInputForm();
     $viewModel = new ViewModel(array('form' => $form));       
     return $viewModel;
 }
@@ -660,6 +661,11 @@ public function elaboratDefinitionDisplayAction()
         //save as new document
         $pathToOutputFile = './data/done/'.$post['elaboratID'].'/'.'Naslovna_stranica.docx';
         $templateProcessor->saveAs($pathToOutputFile);
+
+        //step 3 - Popis koordinata - Excel
+        //Excel se uploada
+        //Genreriraj CSV sa kordinatama iz Excela; U excelu napravljena konk. svih koor. u jedan stupac
+
 
         //generate zip with all documents
         $filter = new Compress(array(

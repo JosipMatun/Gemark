@@ -93,6 +93,91 @@ class UlazniPodaciInputForm extends Form{
 			'placeholder' => 'Broj katastarske čestice'
 		)
 		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'predNositeljPravaJedan1',
+		'attributes' =>  array(
+			'id' => 'predNositeljPravaJedan1',
+			'placeholder' => 'Nositelj prava 1',
+			'style' => 'width: 50%'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'predNositeljPravaDva1',
+		'attributes' =>  array(
+			'id' => 'predNositeljPravaDva1',
+			'placeholder' => 'Nositelj prava 2',
+			'style' => 'width: 50%'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'predNositeljPravaTri1',
+		'attributes' =>  array(
+			'id' => 'predNositeljPravaTri1',
+			'placeholder' => 'Nositelj prava 3',
+			'style' => 'width: 50%'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Textarea',       
+		'name' => 'cesticaOmedenja1',
+		'attributes' =>  array(
+			'id' => 'cesticaOmedenja1',
+			'placeholder' => 'Omeđenja:',
+			'style' => 'width: 100%',
+			'rows' => '8',
+			'cols' => '70'
+		)
+		));
+
+
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'brojSusjedKatCes1',
+		'attributes' =>  array(
+			'id' => 'brojSusjedKatCes1',
+			'placeholder' => 'Broj katastarske čestice',
+			'style' => 'width: 70%;'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'susNositeljPravaJedan1',
+		'attributes' =>  array(
+			'id' => 'susNositeljPravaJedan1',
+			'placeholder' => 'Nositelj prava 1',
+			'style' => 'width: 100%;'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'susNositeljPravaDva1',
+		'attributes' =>  array(
+			'id' => 'susNositeljPravaDva1',
+			'placeholder' => 'Nositelj prava 2',
+			'style' => 'width: 100%;'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'susNositeljPravaTri1',
+		'attributes' =>  array(
+			'id' => 'susNositeljPravaTri1',
+			'placeholder' => 'Nositelj prava 3',
+			'style' => 'width: 100%;'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'susNositeljPravaCetiri1',
+		'attributes' =>  array(
+			'id' => 'susNositeljPravaCetiri1',
+			'placeholder' => 'Nositelj prava 4',
+			'style' => 'width: 100%;'
+		)
+		));
 
 
 		$this->add(array(     
