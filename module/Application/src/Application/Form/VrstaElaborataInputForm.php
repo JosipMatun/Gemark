@@ -137,7 +137,7 @@ class VrstaElaborataInputForm extends Form{
                ),
                array(
                    'value' => 'sadrzaj-9',
-                   'label' => ' 9. prijavni list za katastar',
+                   'label' => ' 9. prijavni list za zemljišnu knjigu',
                    'selected' => true,
                    'attributes' => array(
                        'id' => 'sadrzaj-9'

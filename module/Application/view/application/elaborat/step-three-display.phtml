@@ -4,32 +4,32 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script>
 			$(document).ready(function() {
-			    var max_fields1     = 10;
-			    var wrapper1         = $(".container1");
-			    var add_button1      = $(".add_form_field_1");			  
-			    var x1 = 1;
-			    $(add_button1).click(function(e){
+			    var max_fields31     = 10;
+			    var wrapper31         = $(".container31");
+			    var add_button31      = $(".add_form_field_31");			  
+			    var x31 = 1;
+			    $(add_button31).click(function(e){
 			        e.preventDefault();
-			        if(x1 < max_fields1){
-			            x1++;
+			        if(x31 < max_fields31){
+			            x31++;
 			            var el2 = document.getElementById("brojKatCes1").cloneNode(true);
-			            el2.id = 'brojKatCes' + x1;
+			            el2.id = 'brojKatCes' + x31;
 			            var inps = el2.getElementsByTagName('input');
 			            for (var p = 0;p< inps.length; p++ ){
 			            	inps[p].value = '';
-			            	inps[p].id = inps[p].id.replace(/\d+/, x1);
+			            	inps[p].id = inps[p].id.replace(/\d+/, x31);
 			            	inps[p].name = inps[p].id;
 			            }
-			            el2.getElementsByTagName('h3')[0].innerText = "Čestica " + x1 + ":";
+			            el2.getElementsByTagName('h3')[0].innerText = "Čestica " + x31 + ":";
 			            el2.getElementsByTagName('h3')[0].insertAdjacentHTML('afterend','<a class="delete" style="color: #ff8000; margin-left: 10px;"><i class="fa fa-trash"></i></a>');
-			            $(wrapper1).append(el2); //add input box
+			            $(wrapper31).append(el2); //add input box
 			        }
 			  else
 			  {
 			  alert('You Reached the limits')
 			  }
 			    });			  
-			    $(wrapper1).on("click",".delete", function(e){
+			    $(wrapper31).on("click",".delete", function(e){
 			        e.preventDefault(); $(this).parent('div').remove();
 			    })
 			});
@@ -38,9 +38,9 @@
 	<body>
 		<table>
 			<tr>
-				<td style="padding-right: 4em; display: inline-block;">
-					<div class="container1" style="margin-top: 25px; float: left;">
-						<button class="add_form_field_1">Dodaj česticu &nbsp;
+				<td style="display: inline-block;">
+					<div class="container31" style="margin-top: 25px; float: left;">
+						<button class="add_form_field_31">Dodaj česticu &nbsp;
 							<span style="font-size:16px; font-weight:bold;">+ </span>
 						</button>
 						<div id=brojKatCes1>
@@ -56,11 +56,12 @@
 							echo $this->formRow($form->get('predNositeljPravaDva1'));
 								echo "</br>";
 							echo $this->formRow($form->get('predNositeljPravaTri1'));
-								echo "</br>";
-							echo $this->formRow($form->get('cesticaOmedenja1'));
 							?>
 						</div>
 					</div>
+						<?php
+							echo $this->formRow($form->get('cesticaOmedenja'));
+						?>
 				</td>
 			</tr>
 		</table>

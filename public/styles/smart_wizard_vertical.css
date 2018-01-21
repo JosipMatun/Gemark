@@ -28,7 +28,7 @@
 }
 
 .swMain .stepContainer div.content {
-  height: 550px !important;
+  height: 850px !important;
   display:block;
   position: absolute;  
   float:left;
@@ -263,7 +263,7 @@
   border: 1px solid #FFD700; 
   font: bold 13px Verdana, Arial, Helvetica, sans-serif; 
   color:#5A5655;       
-  background: #FFF url(../images/loader.gif) no-repeat 5px;  
+  background: #FFF url(../img/loader.gif) no-repeat 5px;  
   -moz-border-radius  : 5px;
   -webkit-border-radius: 5px;
   z-index:998;

@@ -537,7 +537,7 @@ public function elaboratDefinitionDisplayAction()
                     $tipElaborata = 'Provedbe u zemljišnoj knjizi';
                     break;
                 case "elaborat-9":
-                    $tipElaborata = 'izmjere postojećeg stanja radi ispravljanja zemljišne knjige';
+                    $tipElaborata = 'Izmjere postojećeg stanja radi ispravljanja zemljišne knjige';
                     break;
                 case "elaborat-10":
                     $tipElaborata = $post['ostalo-ime-elaborata'];
@@ -555,19 +555,25 @@ public function elaboratDefinitionDisplayAction()
             }
             umask($oldmask);
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'Naslovna_stranica_template.docx');
+        $templateProcessor1 = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'Izvjesce_o_medama_template.docx');
 
         //set all template variables to empty
         $allVariables = array();
+        $allVariables1 = array();
         $allVariables = array_merge($allVariables,$templateProcessor->getVariables());
+        $allVariables1 = array_merge($allVariables1,$templateProcessor1->getVariables());
         $allVariablesUnique = array_unique($allVariables);
+        $allVariablesUnique1 = array_unique($allVariables1);
         $allVariablesUniqueFliped = array_flip($allVariablesUnique);
+        $allVariablesUniqueFliped1 = array_flip($allVariablesUnique1);
         $variables = array_fill_keys(array_keys($allVariablesUniqueFliped), '');
+        $variables1 = array_fill_keys(array_keys($allVariablesUniqueFliped1), '');
 
-        //varables mapping
+        //variables mapping
         $variables['TIP_ELABORATA'] = $tipElaborata;
-        $variables['DATUM'] = date("d.m.Y");
+        $variables['DATUM'] = date("d.m.Y.");
         $variables['OZNAKA_ELABORATA'] = $post['oznakaElaborata'];
-        $variables['KATASTARSKA_O'] = $post['KATASTARSKA_O'];
+        $variables['KATASTARSKA_O'] = $post['katastarskaOpcina'];
         if (in_array('sadrzaj-8-1',$post['sastavni-dijelovi'])) {
             $variables['TEHNICKO_IZVJESCE'] = 'Tehničko izvješće';
         }
@@ -578,89 +584,50 @@ public function elaboratDefinitionDisplayAction()
             $variables['IZVJESCE_O_MEDAMA'] = 'Izvješće o međama i drugim zgradama te o novom razgraničenju';
         }
         if (in_array('sadrzaj-9',$post['sastavni-dijelovi'])) {
-            $variables['KOPIJA_PLANA'] = 'Prijavni list za katastar';
+            $variables['KOPIJA_PLANA'] = 'Prijavni list za zemljišnu knjigu';
         }
         if (in_array('sadrzaj-10',$post['sastavni-dijelovi'])) {
             $variables['PRIJAVNI_LIST'] = 'Kopija katastarskog plana za katastar';
         }
-        $imeArray = array();
-        foreach($post as $key=>$value){
-          if("ime" == substr($key,0,3)){
-            $imeArray[] = $value;
-          }
-        }
-        $prezimeArray = array();
-        foreach($post as $key=>$value){
-          if("prezime" == substr($key,0,7)){
-            $prezimeArray[] = $value;
-          }
-        }
-        $adresaArray = array();
-        foreach($post as $key=>$value){
-          if("adresa" == substr($key,0,6)){
-            $adresaArray[] = $value;
-          }
-        }
-        $OIBArray = array();
-        foreach($post as $key=>$value){
-          if("OIB" == substr($key,0,3)){
-            $OIBArray[] = $value;
-          }
-        }
 
-        $brojNarucitelja = count($imeArray);
-        $NARUCITELJI = '';
-        for ($i=0; $i < $brojNarucitelja; $i++) {
-            if (!empty($imeArray[$i])) {
-                $NARUCITELJI = $NARUCITELJI.$imeArray[$i].' ';
-            }
-            if (!empty($prezimeArray[$i])) {
-                $NARUCITELJI = $NARUCITELJI.$prezimeArray[$i].', ';
-            }
-            if (!empty($adresaArray[$i])) {
-                $NARUCITELJI = $NARUCITELJI.$adresaArray[$i].', ';
-            }
-            if (!empty($OIBArray[$i])) {
-                $NARUCITELJI = $NARUCITELJI.$OIBArray[$i].',';
-            }
-            // replace last occ of ',' with '<w:br/>'
-            $pos = strrpos($NARUCITELJI, ',');
-            if($pos !== false)
-            {
-                $NARUCITELJI = substr_replace($NARUCITELJI, '<w:br/>', $pos, strlen(','));
-            }
-        }
-        $variables['NARUCITELJI'] = $NARUCITELJI;
+        $variables1['KATASTARSKA_O'] = $post['katastarskaOpcina'];
+        $variables1['OZNAKA_ELABORATA'] = $post['oznakaElaborata'];
+        $variables1['KONTAKT_OSOBA'] = $post['kontaktOsoba'];
+        $variables1['MJESTO_ELABORATA'] = $post['mjestoElaborata'];
+        $variables1['DATUM_ELABORATA'] = $post['datumElaborata'];
 
-        $cesticeArray = array();
-        foreach($post as $key=>$value){
-          if("brojKatCes" == substr($key,0,10)){
-            $cesticeArray[] = $value;
-          }
-        }
-        $brojCestica = count($cesticeArray);
-        $KATASTARSKA_C = '';
-        for ($i=0; $i < $brojCestica; $i++) {
-            if (!empty($cesticeArray[$i])) {
-                $KATASTARSKA_C = $KATASTARSKA_C.$cesticeArray[$i].', ';
-            }
-        }
-        // replace last occ of ', ' with ', '
-        $pos = strrpos($KATASTARSKA_C, ', ');
-        if($pos !== false)
-        {
-            $KATASTARSKA_C = substr_replace($KATASTARSKA_C, ' ', $pos, strlen(', '));
-        }
-        $variables['KATASTARSKA_C'] = $KATASTARSKA_C;
+        //genreiranje naručitelja
+        $fieldsToExtract = ['ime', 'prezime', 'adresa', 'OIB'];
+        $variables['NARUCITELJI'] = $this->generateMultiOutput($post, $fieldsToExtract, false, '', true, '<w:br/>');
 
-        //var_dump($NARUCITELJI); die();
+        //genreiranje katastarskih Č
+        $fieldsToExtract1 = ['brojKatCes'];
+        $variables['KATASTARSKA_C'] = $variables1['KATASTARSKA_C'] = $this->generateMultiOutput($post, $fieldsToExtract1, false, '', false, ',');
+
+        //generiranje nositelja prava predmetnih
+        $fieldsToExtract2 = ['predNositeljPravaJedan', 'predNositeljPravaDva', 'predNositeljPravaTri'];
+        $variables1['NOS_PRAV_PRED'] = $this->generateMultiOutput($post, $fieldsToExtract2, true, '', false, '<w:br/>');
+
+        //generiranje nositelja prava susjednih
+        $fieldsToExtract3 = ['brojSusjedKatCes', 'susNositeljPravaJedan', 'susNositeljPravaDva', 'susNositeljPravaTri', 'susNositeljPravaCetiri'];
+        $variables1['NOS_PRAV_SUS'] = $this->generateMultiOutput($post, $fieldsToExtract3, true, ' kat. čest. broj. ', false, '<w:br/>', '<w:br/>');
+
+
+
+
+
+var_dump($variables1);
+var_dump($post);
 
         //setting values in template
         $templateProcessor->setValue($allVariablesUnique,$variables);
+        $templateProcessor1->setValue($allVariablesUnique1,$variables1);
 
         //save as new document
         $pathToOutputFile = './data/done/'.$post['elaboratID'].'/'.'Naslovna_stranica.docx';
+        $pathToOutputFile1 = './data/done/'.$post['elaboratID'].'/'.'Izvjesce_o_medama.docx';
         $templateProcessor->saveAs($pathToOutputFile);
+        $templateProcessor1->saveAs($pathToOutputFile1);
 
         //step 3 - Popis koordinata - Excel
         //Excel se uploada
@@ -712,6 +679,51 @@ public function elaboratDefinitionDisplayAction()
     return $response;
     }
 
+
+    public function generateMultiOutput($arrayWithData = NULL, $fieldsToExtract = NULL,$numbering = false, $prefixes = NULL, $removeFirstComma = false, $rowSeperator = ', ', $columnSeperator = ', ', $replaceFirstCommaWith = '. ') {
+        foreach ($fieldsToExtract as $fieldIndex => $fieldName) {
+            foreach($arrayWithData as $key=>$value){
+              if($fieldName == substr($key,0,strlen($fieldName))){
+                $dataArray[$fieldIndex][] = $value;
+              }
+            }
+        }
+        $brojNarucitelja = count($dataArray[0]);
+        $finalString = '';
+        for ($i=0; $i < $brojNarucitelja; $i++) {
+            $tempString = '';
+            foreach ($dataArray as $variable) {
+                if (!empty($variable[$i])) {
+                    $tempString = $tempString.$variable[$i].$columnSeperator;
+                }
+            }
+            if ($removeFirstComma == true) {
+                // remove first occ of $columnSeperator
+                $pos = strpos($tempString, $columnSeperator);
+                if($pos !== false)
+                {
+                    $tempString = substr_replace($tempString, $replaceFirstCommaWith, $pos, strlen($columnSeperator));
+                }
+            }
+            if (!empty($prefixes)) {
+                $tempString = $prefixes.$tempString;
+            }
+            if ($numbering == true) {
+                $x = $i+1;
+                $tempString = $x.".  ".$tempString;
+            }
+            // replace last occ of ',' with '<w:br/>'
+            $pos = strrpos($tempString, $columnSeperator);
+            if($pos !== false)
+            {
+                $tempString = substr_replace($tempString, $rowSeperator, $pos, strlen($columnSeperator));
+            }
+        $finalString = $finalString.$tempString;
+        }
+        //var_dump($finalString);
+        //die();
+    return $finalString;
+    }
 
 	
 }

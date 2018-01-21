@@ -22,7 +22,6 @@ echo $this->headScript()
   		$('#wizard').smartWizard({contentURL:'<?php echo dirname($_SERVER[REQUEST_URI]).'/vrstaElaborataInput'; ?>',transitionEffect:'slideleft',onFinish:onFinishCallback});
       
       function onFinishCallback(){
-        debugger
         $('form').submit();
       }     
 		});

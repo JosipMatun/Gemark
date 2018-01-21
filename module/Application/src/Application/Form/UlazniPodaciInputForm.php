@@ -48,7 +48,34 @@ class UlazniPodaciInputForm extends Form{
 			'id' => 'zemljiOpcina',
 			'placeholder' => 'Zemljišnoknjižna općina'
 		)
+		));				
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',       
+		'name' => 'kontaktOsoba',
+		'attributes' =>  array(
+			'id' => 'kontaktOsoba',
+			'style' => 'width: 135%',
+			'placeholder' => 'Kontakt osoba (izdavatelj elaborata)'
+		)
 		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Date',
+		'name' => 'datumElaborata',
+		'attributes' =>  array(
+			'id' => 'datumElaborata',
+			'style' => 'width: 135%',
+			'placeholder' => 'Datum elaborata'
+		)
+		));
+		$this->add(array(     
+		'type' => 'Zend\Form\Element\Text',
+		'name' => 'mjestoElaborata',
+		'attributes' =>  array(
+			'id' => 'mjestoElaborata',
+			'style' => 'width: 135%',
+			'placeholder' => 'Mjesto elaborata'
+		)
+		));	
 
 
 		$this->add(array(     
@@ -99,7 +126,7 @@ class UlazniPodaciInputForm extends Form{
 		'attributes' =>  array(
 			'id' => 'predNositeljPravaJedan1',
 			'placeholder' => 'Nositelj prava 1',
-			'style' => 'width: 50%'
+			'style' => 'width: 200%'
 		)
 		));
 		$this->add(array(     
@@ -108,7 +135,7 @@ class UlazniPodaciInputForm extends Form{
 		'attributes' =>  array(
 			'id' => 'predNositeljPravaDva1',
 			'placeholder' => 'Nositelj prava 2',
-			'style' => 'width: 50%'
+			'style' => 'width: 200%'
 		)
 		));
 		$this->add(array(     
@@ -117,18 +144,18 @@ class UlazniPodaciInputForm extends Form{
 		'attributes' =>  array(
 			'id' => 'predNositeljPravaTri1',
 			'placeholder' => 'Nositelj prava 3',
-			'style' => 'width: 50%'
+			'style' => 'width: 200%'
 		)
 		));
 		$this->add(array(     
 		'type' => 'Zend\Form\Element\Textarea',       
-		'name' => 'cesticaOmedenja1',
+		'name' => 'cesticaOmedenja',
 		'attributes' =>  array(
-			'id' => 'cesticaOmedenja1',
-			'placeholder' => 'Omeđenja:',
-			'style' => 'width: 100%',
-			'rows' => '8',
-			'cols' => '70'
+			'id' => 'cesticaOmedenja',
+			'placeholder' => 'Sažetak omeđenja:',
+			'style' => 'width: 100%; margin-top: 2em;',
+			'rows' => '12',
+			'cols' => '80'
 		)
 		));
 
