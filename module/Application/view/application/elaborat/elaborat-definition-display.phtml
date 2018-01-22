@@ -13,6 +13,7 @@ echo $this->headLink()
 
 echo $this->headScript()
         ->prependFile($this->basePath() . '/gemark-work/public/js/jquery.smartWizard.js')
+        ->prependFile('http://malsup.github.com/jquery.form.js')
         ->prependFile($this->basePath() . '/gemark-work/public/js/jquery-2.0.0.min.js');
 ?>
 
@@ -22,7 +23,16 @@ echo $this->headScript()
   		$('#wizard').smartWizard({contentURL:'<?php echo dirname($_SERVER[REQUEST_URI]).'/vrstaElaborataInput'; ?>',transitionEffect:'slideleft',onFinish:onFinishCallback});
       
       function onFinishCallback(){
-        $('form').submit();
+        // prepare Options Object 
+        var options = {
+            url: './elaboratSubmitHandler', 
+            success: function(data) {
+                alert(data);
+                window.location = data; 
+            } 
+        }; 
+        $('form').ajaxSubmit(options)
+        //$('form').submit();
       }     
 		});
 </script>

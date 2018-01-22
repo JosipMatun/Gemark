@@ -626,8 +626,8 @@ public function elaboratDefinitionDisplayAction()
 
 
 
-var_dump($variables1);
-var_dump($post);
+//var_dump($variables1);
+//var_dump($post);
 
         //setting values in template
         $templateProcessor->setValue($allVariablesUnique,$variables);
