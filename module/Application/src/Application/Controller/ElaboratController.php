@@ -595,6 +595,10 @@ public function elaboratDefinitionDisplayAction()
         $variables1['KONTAKT_OSOBA'] = $post['kontaktOsoba'];
         $variables1['MJESTO_ELABORATA'] = $post['mjestoElaborata'];
         $variables1['DATUM_ELABORATA'] = $post['datumElaborata'];
+        $variables1['CESTICA_OMEDENJA'] = str_replace ( "\r\n" , '<w:br/>' , $post['cesticaOmedenja']);
+        $variables1['KONTAKT_OSOBA'] = $post['kontaktOsoba'];
+        $variables1['MJESTO_ELABORATA'] = $post['mjestoElaborata'];
+        $variables1['DATUM'] = date("d.m.Y.");
 
         //genreiranje naručitelja
         $fieldsToExtract = ['ime', 'prezime', 'adresa', 'OIB'];
@@ -610,9 +614,15 @@ public function elaboratDefinitionDisplayAction()
 
         //generiranje nositelja prava susjednih
         $fieldsToExtract3 = ['brojSusjedKatCes', 'susNositeljPravaJedan', 'susNositeljPravaDva', 'susNositeljPravaTri', 'susNositeljPravaCetiri'];
-        $variables1['NOS_PRAV_SUS'] = $this->generateMultiOutput($post, $fieldsToExtract3, true, ' kat. čest. broj. ', false, '<w:br/>', '<w:br/>');
+        $variables1['NOS_PRAV_SUS'] = $this->generateMultiOutput($post, $fieldsToExtract3, true, ' kat. čest. broj. ', false, '<w:br/>', '<w:br/>   - ');
 
+        //generiranje potpisa nositelja prava predmetnih
+        $fieldsToExtract4 = ['predNositeljPravaJedan', 'predNositeljPravaDva', 'predNositeljPravaTri'];
+        $variables1['POTPISI_PREDMETNE'] = $this->generateMultiOutput($post, $fieldsToExtract4, true, '    _______________________________   ', false, '<w:br/>');
 
+        //generiranje potpisa nositelja prava susjednih
+        $fieldsToExtract5 = ['susNositeljPravaJedan', 'susNositeljPravaDva', 'susNositeljPravaTri', 'susNositeljPravaCetiri'];
+        $variables1['POTPISI_SUSJEDNE'] = $this->generateMultiOutput($post, $fieldsToExtract5, true, '    _______________________________   ', false, '<w:br/>');
 
 
 
