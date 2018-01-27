@@ -552,6 +552,7 @@ public function elaboratDefinitionDisplayAction()
             $folders = glob("./data/done/*", GLOB_ONLYDIR);
             if(!in_array($post['elaboratID'],$folders)){
                 mkdir("data/done/".$post['elaboratID'], 0777);
+                mkdir("data/done/".$post['elaboratID']."/povratnice", 0777);
             }
             umask($oldmask);
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'Naslovna_stranica_template.docx');
@@ -639,9 +640,25 @@ public function elaboratDefinitionDisplayAction()
         $templateProcessor->saveAs($pathToOutputFile);
         $templateProcessor1->saveAs($pathToOutputFile1);
 
-        //step 3 - Popis koordinata - Excel
-        //Excel se uploada
-        //Genreriraj CSV sa kordinatama iz Excela; U excelu napravljena konk. svih koor. u jedan stupac
+        //generiranje povratnica
+        $narucitelj = $post['ime1'].' '.$post['prezime1'];
+        $sviNositelji = $this->extractSviNositelji($post);
+        foreach ($sviNositelji as $key => $value) {
+            $templateProcessor3 = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'POVRATNICA_template.docx');
+            $templateProcessor3->setValue('NARUCITELJ',$narucitelj);
+            $NOSITELJ_POVRATNICA = '';
+                $pos = strpos($value, ',');
+                if($pos !== false)
+                {
+                    $NOSITELJ_POVRATNICA = substr_replace($value, '<w:br/>', $pos, strlen(','));
+                }
+            $templateProcessor3->setValue('NOSITELJ_POVRATNICA',$NOSITELJ_POVRATNICA);
+            $povratnicaNew = './data/done/'.$post['elaboratID'].'/povratnice/'.'POVRATNICA_'.$key.'.docx';
+            $templateProcessor3->saveAs($povratnicaNew);
+            $svePovratniceZaElaborat[] = $povratnicaNew;
+        }
+        $this->wordMerge($svePovratniceZaElaborat, './data/done/'.$post['elaboratID'].'/'.'POVRATNICA_SVE.docx');
+
 
 
         //generate zip with all documents
@@ -733,6 +750,35 @@ public function elaboratDefinitionDisplayAction()
         //var_dump($finalString);
         //die();
     return $finalString;
+    }
+
+    public function wordMerge($inputArray = NULL, $outputFile = NULL){
+        if (!empty($inputArray) and !empty($outputFile)) {
+            $dm =  new \DocxMerge\DocxMerge();
+            $dm->merge($inputArray, $outputFile);
+            //delete temp files
+            array_map('unlink', glob( dirname($outputFile)."/*.tmp"));
+        }
+    }
+
+    public function extractSviNositelji($post = NULL){
+        $fieldsToExtract = [
+            "predNositeljPravaJedan",
+            "predNositeljPravaDva",
+            "predNositeljPravaTri",
+            "susNositeljPravaJedan",
+            "susNositeljPravaDva",
+            "susNositeljPravaTri",
+            "susNositeljPravaCetiri"
+        ];
+        foreach ($fieldsToExtract as $fieldIndex => $fieldName) {
+            foreach($post as $key=>$value){
+              if($fieldName == substr($key,0,strlen($fieldName))){
+                $dataArray[] = $value;
+              }
+            }
+        }
+        return $dataArray;
     }
 
 	
