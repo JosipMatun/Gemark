@@ -546,6 +546,75 @@ public function elaboratDefinitionDisplayAction()
                     var_dump($post);
                     die();
             }
+        if (!empty($post['usernames2'])) {
+            switch ($post['usernames2']) {
+                case "elaborat-1":
+                    $tipElaborata2 = 'Diobe ili spajanja katastarskih čestica';
+                    break;
+                case "elaborat-2":
+                    $tipElaborata2 = 'Provedbe dokumenata ili akata prostornog uređenja';
+                    break;
+                case "elaborat-3":
+                    $tipElaborata2 = 'Evidentiranja pomorskog ili vodnog dobra';
+                    break;
+                case "elaborat-4":
+                    $tipElaborata2 = 'Evidentiranja, brisanja ili promjene podataka o zgradama ili drugim građevinama';
+                    break;
+                case "elaborat-5":
+                    $tipElaborata2 = 'Evidentiranja ili promjene podataka o načinu uporabe katastarskih čestica';
+                    break;
+                case "elaborat-6":
+                    $tipElaborata2 = 'Evidentiranja stvarnog položaja pojedinačnih već evidentiranih katastarskih čestica';
+                    break;
+                case "elaborat-7":
+                    $tipElaborata2 = 'Evidentiranja međa uređenih u posebnome postupku';
+                    break;
+                case "elaborat-8":
+                    $tipElaborata2 = 'Provedbe u zemljišnoj knjizi';
+                    break;
+                case "elaborat-9":
+                    $tipElaborata2 = 'Izmjere postojećeg stanja radi ispravljanja zemljišne knjige';
+                    break;
+                default:
+                    var_dump($post);
+                    die();
+            }
+        }
+        if (!empty($post['usernames3'])) {
+            switch ($post['usernames3']) {
+                case "elaborat-1":
+                    $tipElaborata3 = 'Diobe ili spajanja katastarskih čestica';
+                    break;
+                case "elaborat-2":
+                    $tipElaborata3 = 'Provedbe dokumenata ili akata prostornog uređenja';
+                    break;
+                case "elaborat-3":
+                    $tipElaborata3 = 'Evidentiranja pomorskog ili vodnog dobra';
+                    break;
+                case "elaborat-4":
+                    $tipElaborata3 = 'Evidentiranja, brisanja ili promjene podataka o zgradama ili drugim građevinama';
+                    break;
+                case "elaborat-5":
+                    $tipElaborata3 = 'Evidentiranja ili promjene podataka o načinu uporabe katastarskih čestica';
+                    break;
+                case "elaborat-6":
+                    $tipElaborata3 = 'Evidentiranja stvarnog položaja pojedinačnih već evidentiranih katastarskih čestica';
+                    break;
+                case "elaborat-7":
+                    $tipElaborata3 = 'Evidentiranja međa uređenih u posebnome postupku';
+                    break;
+                case "elaborat-8":
+                    $tipElaborata3 = 'Provedbe u zemljišnoj knjizi';
+                    break;
+                case "elaborat-9":
+                    $tipElaborata3 = 'Izmjere postojećeg stanja radi ispravljanja zemljišne knjige';
+                    break;
+                default:
+                    var_dump($post);
+                    die();
+            }
+        }
+
         //poziv worda            
             //create new directory
             $oldmask = umask(0);
@@ -571,7 +640,7 @@ public function elaboratDefinitionDisplayAction()
         $variables1 = array_fill_keys(array_keys($allVariablesUniqueFliped1), '');
 
         //variables mapping
-        $variables['TIP_ELABORATA'] = $tipElaborata;
+        $variables['TIP_ELABORATA'] = $tipElaborata.'<w:br/>'.$tipElaborata2.'<w:br/>'.$tipElaborata3;
         $variables['DATUM'] = date("d.m.Y.");
         $variables['OZNAKA_ELABORATA'] = $post['oznakaElaborata'];
         $variables['KATASTARSKA_O'] = $post['katastarskaOpcina'];
@@ -643,10 +712,11 @@ public function elaboratDefinitionDisplayAction()
         //generiranje povratnica
         $narucitelj = $post['ime1'].' '.$post['prezime1'];
         $sviNositelji = $this->extractSviNositelji($post);
+        //var_dump($sviNositelji);
         foreach ($sviNositelji as $key => $value) {
             $templateProcessor3 = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'POVRATNICA_template.docx');
             $templateProcessor3->setValue('NARUCITELJ',$narucitelj);
-            $NOSITELJ_POVRATNICA = '';
+            $NOSITELJ_POVRATNICA = $value;
                 $pos = strpos($value, ',');
                 if($pos !== false)
                 {
@@ -773,7 +843,7 @@ public function elaboratDefinitionDisplayAction()
         ];
         foreach ($fieldsToExtract as $fieldIndex => $fieldName) {
             foreach($post as $key=>$value){
-              if($fieldName == substr($key,0,strlen($fieldName))){
+              if($fieldName == substr($key,0,strlen($fieldName)) and !empty($value)){
                 $dataArray[] = $value;
               }
             }

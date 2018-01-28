@@ -10,6 +10,30 @@
 				document.getElementById('ostalo-ime-elaborata').style.display = 'none';
 			}
 		};
+  		var el2 = document.getElementById('dodajDrugi');
+		el2.onclick = function(e){
+			if (document.getElementById('usernames2').style.display === 'none') {
+				document.getElementById('usernames2').style.display = 'inline-block';
+				document.getElementById('usernames2').removeAttribute("disabled");
+				document.getElementById('dodajTreci').style.display = 'inline-block';
+			} else {
+				document.getElementById('usernames2').style.display = 'none';
+				document.getElementById('usernames2').disabled = true;
+				document.getElementById('dodajTreci').style.display = 'none';
+			}
+		};
+  		var el3 = document.getElementById('dodajTreci');
+		el3.onclick = function(e){
+			if (document.getElementById('usernames3').style.display === 'none') {
+				document.getElementById('usernames3').style.display = 'inline-block';
+				document.getElementById('usernames3').removeAttribute("disabled");
+			} else {
+				document.getElementById('usernames3').style.display = 'none';
+				document.getElementById('usernames3').disabled = true;
+			}
+		};
+
+
 		});
 	</script>
 	</head>
@@ -24,8 +48,14 @@
 					$form->prepare();
 					
 					echo $this->formRow($form->get('usernames'));
-						echo "</br>";						
+						echo '<button id="dodajDrugi" type="button" style="margin-left:  10px;">+/-</button>';
+						echo "</br>";
 					echo $this->formRow($form->get('ostalo-ime-elaborata'));
+					echo $this->formRow($form->get('usernames2'));
+						echo '<button id="dodajTreci" style="display: none; margin-left:  10px;" type="button">+/-</button>';
+						echo "</br>";
+					echo $this->formRow($form->get('usernames3'));
+						echo "</br>";
 					echo $this->formRow($form->get('sastavni-dijelovi'), null, null, 'template-file');
 					?>
 					</div>
