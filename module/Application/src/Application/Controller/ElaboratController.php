@@ -679,19 +679,19 @@ public function elaboratDefinitionDisplayAction()
         $variables['KATASTARSKA_C'] = $variables1['KATASTARSKA_C'] = $this->generateMultiOutput($post, $fieldsToExtract1, false, '', false, ',');
 
         //generiranje nositelja prava predmetnih
-        $fieldsToExtract2 = ['predNositeljPravaJedan', 'predNositeljPravaDva', 'predNositeljPravaTri'];
+        $fieldsToExtract2 = ['predNositeljPrava'];
         $variables1['NOS_PRAV_PRED'] = $this->generateMultiOutput($post, $fieldsToExtract2, true, '', false, '<w:br/>');
 
         //generiranje nositelja prava susjednih
-        $fieldsToExtract3 = ['brojSusjedKatCes', 'susNositeljPravaJedan', 'susNositeljPravaDva', 'susNositeljPravaTri', 'susNositeljPravaCetiri'];
-        $variables1['NOS_PRAV_SUS'] = $this->generateMultiOutput($post, $fieldsToExtract3, true, ' kat. čest. broj. ', false, '<w:br/>', '<w:br/>   - ');
+        $fieldsToExtract3 = ['brojSusjedKatCes', 'susNositeljPrava'];
+        $variables1['NOS_PRAV_SUS'] = $this->generateMultiOutput($post, $fieldsToExtract3, true, ' kat. čest. broj. ', false, '<w:br/>', '<w:br/>   - ', true);
 
         //generiranje potpisa nositelja prava predmetnih
-        $fieldsToExtract4 = ['predNositeljPravaJedan', 'predNositeljPravaDva', 'predNositeljPravaTri'];
+        $fieldsToExtract4 = ['predNositeljPrava'];
         $variables1['POTPISI_PREDMETNE'] = $this->generateMultiOutput($post, $fieldsToExtract4, true, '    _______________________________   ', false, '<w:br/>');
 
         //generiranje potpisa nositelja prava susjednih
-        $fieldsToExtract5 = ['susNositeljPravaJedan', 'susNositeljPravaDva', 'susNositeljPravaTri', 'susNositeljPravaCetiri'];
+        $fieldsToExtract5 = ['susNositeljPrava'];
         $variables1['POTPISI_SUSJEDNE'] = $this->generateMultiOutput($post, $fieldsToExtract5, true, '    _______________________________   ', false, '<w:br/>');
 
 
@@ -777,7 +777,14 @@ public function elaboratDefinitionDisplayAction()
     }
 
 
-    public function generateMultiOutput($arrayWithData = NULL, $fieldsToExtract = NULL,$numbering = false, $prefixes = NULL, $removeFirstComma = false, $rowSeperator = ', ', $columnSeperator = ', ', $replaceFirstCommaWith = '. ') {
+    public function generateMultiOutput($arrayWithData = NULL, $fieldsToExtract = NULL,$numbering = false, $prefixes = NULL, $removeFirstComma = false, $rowSeperator = ', ', $columnSeperator = ', ', $multiValues = false, $replaceFirstCommaWith = '. ') {
+        if ($multiValues == true) {            
+            foreach($arrayWithData as $key=>$value){
+              if($fieldsToExtract[1] == substr($key,0,strlen($fieldsToExtract[1])) and !empty($value)){
+                $valuesForMultiArray[$key] = $value;
+              }
+            }
+        }
         foreach ($fieldsToExtract as $fieldIndex => $fieldName) {
             foreach($arrayWithData as $key=>$value){
               if($fieldName == substr($key,0,strlen($fieldName))){
@@ -785,13 +792,28 @@ public function elaboratDefinitionDisplayAction()
               }
             }
         }
+        //var_dump($dataArray);
         $brojNarucitelja = count($dataArray[0]);
         $finalString = '';
         for ($i=0; $i < $brojNarucitelja; $i++) {
             $tempString = '';
             foreach ($dataArray as $variable) {
                 if (!empty($variable[$i])) {
-                    $tempString = $tempString.$variable[$i].$columnSeperator;
+                    //ako je multiple, ne želimo gledati ovaj dio (pojedinačni)
+                    if ($multiValues != true) {
+                        $tempString = $tempString.$variable[$i].$columnSeperator;
+                    }
+                }
+            }
+            if ($multiValues == true) {
+                //add broj kat. čes
+                $tempString = $tempString.$dataArray[0][$i].$columnSeperator;
+                //add višestruke nositelje na čestici
+                foreach($valuesForMultiArray as $key=>$value){
+                    $j=$i+1;
+                  if(substr($key, 0, strlen($fieldsToExtract[1]."-".$j)) == $fieldsToExtract[1]."-".$j){
+                    $tempString = $tempString.$value.$columnSeperator;
+                  }
                 }
             }
             if ($removeFirstComma == true) {
@@ -833,13 +855,8 @@ public function elaboratDefinitionDisplayAction()
 
     public function extractSviNositelji($post = NULL){
         $fieldsToExtract = [
-            "predNositeljPravaJedan",
-            "predNositeljPravaDva",
-            "predNositeljPravaTri",
-            "susNositeljPravaJedan",
-            "susNositeljPravaDva",
-            "susNositeljPravaTri",
-            "susNositeljPravaCetiri"
+            "predNositeljPrava",
+            "susNositeljPrava"
         ];
         foreach ($fieldsToExtract as $fieldIndex => $fieldName) {
             foreach($post as $key=>$value){

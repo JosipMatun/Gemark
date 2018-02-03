@@ -122,11 +122,11 @@ class UlazniPodaciInputForm extends Form{
 		));
 		$this->add(array(     
 		'type' => 'Zend\Form\Element\Text',       
-		'name' => 'predNositeljPravaJedan1',
+		'name' => 'predNositeljPrava-1-1',
 		'attributes' =>  array(
-			'id' => 'predNositeljPravaJedan1',
+			'id' => 'predNositeljPrava-1-1',
 			'placeholder' => 'Nositelj prava 1',
-			'style' => 'width: 200%'
+			'style' => 'width: 80%; display: inline-block;'
 		)
 		));
 		$this->add(array(     
@@ -166,16 +166,16 @@ class UlazniPodaciInputForm extends Form{
 		'attributes' =>  array(
 			'id' => 'brojSusjedKatCes1',
 			'placeholder' => 'Broj katastarske čestice',
-			'style' => 'width: 70%;'
+			'style' => 'width: 25%;'
 		)
 		));
 		$this->add(array(     
-		'type' => 'Zend\Form\Element\Text',       
-		'name' => 'susNositeljPravaJedan1',
+		'type' => 'Zend\Form\Element\Text',
+		'name' => 'susNositeljPrava-1-1',
 		'attributes' =>  array(
-			'id' => 'susNositeljPravaJedan1',
+			'id' => 'susNositeljPrava-1-1',
 			'placeholder' => 'Nositelj prava 1',
-			'style' => 'width: 100%;'
+			'style' => 'width: 70%;'
 		)
 		));
 		$this->add(array(     

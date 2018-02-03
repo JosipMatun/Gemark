@@ -4,10 +4,12 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script>
 			$(document).ready(function() {
-			    var max_fields41     = 10;
-			    var wrapper41         = $(".container41");
-			    var add_button41      = $(".add_form_field_41");			  
-			    var x41 = 1;
+			    var max_fields41     = 10,
+			    	wrapper41         = $(".container41"),
+			    	add_button41      = $(".add_form_field_41"),		  
+			    	x41 = 1,
+			    	arrOfCounters = [1];
+
 			    $(add_button41).click(function(e){
 			        e.preventDefault();
 			        if(x41 < max_fields41){
@@ -16,10 +18,35 @@
 			            el2.id = 'cesticaNositelji' + x41;
 			            var inps = el2.getElementsByTagName('input');
 			            for (var p = 0;p< inps.length; p++ ){
-			            	inps[p].value = '';
-			            	inps[p].id = inps[p].id.replace(/\d+/, x41);
-			            	inps[p].name = inps[p].id;
+			            	if (p > 1) {
+			            		inps[p].className = 'toRemove';
+			            	} else {
+				            	inps[p].value = '';
+				            	inps[p].id = inps[p].id.replace(/\d+/, x41);
+				            	inps[p].name = inps[p].id;
+			            	}
 			            }
+			            var listToRemove = el2.getElementsByClassName('toRemove');
+			            while(listToRemove.length > 0){
+					        listToRemove[0].remove();
+					    }
+			            arrOfCounters.push(1);
+			            var btnDodajNositelja = el2.getElementsByTagName('button')[0];
+			            btnDodajNositelja.id = btnDodajNositelja.id.replace(/\d+/, x41);
+			            btnDodajNositelja.setAttribute('brcestice',x41);
+			            btnDodajNositelja.onclick = function(e) {
+			            	var brCestice = e.target.getAttribute('brcestice'),
+			            		newNositelj = document.getElementById("susNositeljPrava-1-1").cloneNode(true),
+			            		brNositelja;
+
+			            	arrOfCounters[brCestice-1]++;
+			            	brNositelja = arrOfCounters[brCestice-1];
+			            	newNositelj.id = 'susNositeljPrava-' + brCestice + '-' + brNositelja;
+			            	newNositelj.name = newNositelj.id;
+			            	newNositelj.placeholder = newNositelj.placeholder.replace(/\d+/, brNositelja);
+
+			            	e.target.parentElement.appendChild(newNositelj);
+			            };
 			            el2.getElementsByTagName('h3')[0].innerText = "Čestica " + x41 + ":";
 			            el2.getElementsByTagName('h3')[0].insertAdjacentHTML('afterend','<a class="delete" style="color: #ff8000; margin-left: 10px;"><i class="fa fa-trash"></i></a>');
 			            $(wrapper41).append(el2); //add input box
@@ -32,13 +59,27 @@
 			    $(wrapper41).on("click",".delete", function(e){
 			        e.preventDefault(); $(this).parent('div').remove();
 			    })
+
+			    $(dodajSusNosPrava1).click(function(e){
+				    var brCestice = 1,
+	            		newNositelj = document.getElementById("susNositeljPrava-1-1").cloneNode(true),
+	            		brNositelja;
+
+	            	arrOfCounters[brCestice-1]++;
+	            	brNositelja = arrOfCounters[brCestice-1];
+	            	newNositelj.id = 'susNositeljPrava-' + brCestice + '-' + brNositelja;
+			        newNositelj.name = newNositelj.id;
+	            	newNositelj.placeholder = newNositelj.placeholder.replace(/\d+/, brNositelja);
+
+	            	e.target.parentElement.appendChild(newNositelj);
+			  	})
 			});
 		</script>
 	</head>
 	<body>
-		<table>
+		<table style="width: 100%";>
 			<tr>
-				<td style="padding-right: 4em; display: inline-block;">
+				<td style="padding-right: 4em;">
 					<div>
 					<button class="add_form_field_41">Dodaj česticu &nbsp;
 						<span style="font-size:16px; font-weight:bold;">+ </span>
@@ -47,21 +88,24 @@
 					<div class="container41" style="float: left; width: 100%;">
 						<div id=cesticaNositelji1>
 							<div>
-							<h3 style="display: inline-block;">Čestica 1:</h3>
+							</br>
+							<h3 style="display: inline; margin-top: 10px;">Čestica 1:</h3>
+							</br>
 								<?php
 								$form = $this->form;
 								$form->prepare();
 								
 								echo $this->formRow($form->get('brojSusjedKatCes1'));
 								echo "</br>";
-								echo $this->formRow($form->get('susNositeljPravaJedan1'));
+								echo $this->formRow($form->get('susNositeljPrava-1-1'));
+								echo '<button id="dodajSusNosPrava1" type="button" style="margin-left:  10px; display: inline-block;">+</button>';
 								echo "</br>";
-								echo $this->formRow($form->get('susNositeljPravaDva1'));
-								echo "</br>";
-								echo $this->formRow($form->get('susNositeljPravaTri1'));
-								echo "</br>";
-								echo $this->formRow($form->get('susNositeljPravaCetiri1'));
-								echo "</br>";
+								//echo $this->formRow($form->get('susNositeljPravaDva1'));
+								//echo "</br>";
+								//echo $this->formRow($form->get('susNositeljPravaTri1'));
+								//echo "</br>";
+								//echo $this->formRow($form->get('susNositeljPravaCetiri1'));
+								//echo "</br>";
 								?>
 							</div>
 						</div>
