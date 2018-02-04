@@ -615,13 +615,17 @@ public function elaboratDefinitionDisplayAction()
             }
         }
 
+        //probaj dohvatiti oznaku elaborata
+        $oznakaElaborata = '';
+        $oznakaElaborata = $post['oznakaElaborata'];
+
         //poziv worda            
             //create new directory
             $oldmask = umask(0);
             $folders = glob("./data/done/*", GLOB_ONLYDIR);
-            if(!in_array($post['elaboratID'],$folders)){
-                mkdir("data/done/".$post['elaboratID'], 0777);
-                mkdir("data/done/".$post['elaboratID']."/povratnice", 0777);
+            if(!in_array($post['elaboratID'].'-'.$oznakaElaborata,$folders)){
+                mkdir("data/done/".$post['elaboratID'].'-'.$oznakaElaborata, 0777);
+                mkdir("data/done/".$post['elaboratID'].'-'.$oznakaElaborata."/povratnice", 0777);
             }
             umask($oldmask);
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('./data/dokumenti/templates/naslovna/'.'Naslovna_stranica_template.docx');
@@ -704,8 +708,8 @@ public function elaboratDefinitionDisplayAction()
         $templateProcessor1->setValue($allVariablesUnique1,$variables1);
 
         //save as new document
-        $pathToOutputFile = './data/done/'.$post['elaboratID'].'/'.'Naslovna_stranica.docx';
-        $pathToOutputFile1 = './data/done/'.$post['elaboratID'].'/'.'Izvjesce_o_medama.docx';
+        $pathToOutputFile = './data/done/'.$post['elaboratID'].'-'.$oznakaElaborata.'/'.'Naslovna_stranica-'.$oznakaElaborata.'.docx';
+        $pathToOutputFile1 = './data/done/'.$post['elaboratID'].'-'.$oznakaElaborata.'/'.'Izvjesce_o_medama-'.$oznakaElaborata.'.docx';
         $templateProcessor->saveAs($pathToOutputFile);
         $templateProcessor1->saveAs($pathToOutputFile1);
 
@@ -723,26 +727,24 @@ public function elaboratDefinitionDisplayAction()
                     $NOSITELJ_POVRATNICA = substr_replace($value, '<w:br/>', $pos, strlen(','));
                 }
             $templateProcessor3->setValue('NOSITELJ_POVRATNICA',$NOSITELJ_POVRATNICA);
-            $povratnicaNew = './data/done/'.$post['elaboratID'].'/povratnice/'.'POVRATNICA_'.$key.'.docx';
+            $povratnicaNew = './data/done/'.$post['elaboratID'].'-'.$oznakaElaborata.'/povratnice/'.'POVRATNICA_'.$key.'.docx';
             $templateProcessor3->saveAs($povratnicaNew);
             $svePovratniceZaElaborat[] = $povratnicaNew;
         }
-        $this->wordMerge($svePovratniceZaElaborat, './data/done/'.$post['elaboratID'].'/'.'POVRATNICA_SVE.docx');
-
-
+        $this->wordMerge($svePovratniceZaElaborat, './data/done/'.$post['elaboratID'].'-'.$oznakaElaborata.'/'.'POVRATNICA_SVE-'.$oznakaElaborata.'.docx');
 
         //generate zip with all documents
         $filter = new Compress(array(
         'adapter' => 'Zip',
         'options' => array(
-            'archive' => "./data/done/".$post['elaboratID'].".zip"
+            'archive' => "./data/done/".$post['elaboratID'].'-'.$oznakaElaborata.'.zip'
         ),
         ));
-        $compressed = $filter->filter("./data/done/".$post['elaboratID']);
+        $compressed = $filter->filter("./data/done/".$post['elaboratID'].'-'.$oznakaElaborata);
 
         //render view with parameters
         $viewModel = new ViewModel();
-        $viewModel->setVariable('zip', $post['elaboratID'].".zip");
+        $viewModel->setVariable('zip', $post['elaboratID'].'-'.$oznakaElaborata.'.zip');
         return $viewModel;
 
         }
