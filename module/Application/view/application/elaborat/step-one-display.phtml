@@ -1,39 +1,98 @@
 <html>
 	<head>
 	<script type="text/javascript">
-    $(document).ready(function(){ 	
-  		var el = document.getElementById('usernames');
-		el.onchange = function(e){
-			if (e.currentTarget.value === "elaborat-10") {
-				document.getElementById('ostalo-ime-elaborata').style.display = 'block';
-			} else {
-				document.getElementById('ostalo-ime-elaborata').style.display = 'none';
-			}
-		};
-  		var el2 = document.getElementById('dodajDrugi');
-		el2.onclick = function(e){
-			if (document.getElementById('usernames2').style.display === 'none') {
-				document.getElementById('usernames2').style.display = 'inline-block';
-				document.getElementById('usernames2').removeAttribute("disabled");
-				document.getElementById('dodajTreci').style.display = 'inline-block';
-			} else {
-				document.getElementById('usernames2').style.display = 'none';
-				document.getElementById('usernames2').disabled = true;
-				document.getElementById('dodajTreci').style.display = 'none';
-			}
-		};
-  		var el3 = document.getElementById('dodajTreci');
-		el3.onclick = function(e){
-			if (document.getElementById('usernames3').style.display === 'none') {
-				document.getElementById('usernames3').style.display = 'inline-block';
-				document.getElementById('usernames3').removeAttribute("disabled");
-			} else {
-				document.getElementById('usernames3').style.display = 'none';
-				document.getElementById('usernames3').disabled = true;
-			}
-		};
+    $(document).ready(function(){
+    	var createElements = function(elaboratData) {
+	  		var el = document.getElementById('usernames');
+	  		if (elaboratData && elaboratData.usernames) {
+	  			el.value = elaboratData.usernames;
 
+				if (elaboratData['ostalo-ime-elaborata'] && elaboratData['ostalo-ime-elaborata'] !== '') {
+					document.getElementById('ostalo-ime-elaborata').style.display = 'block';
+					document.getElementById('ostalo-ime-elaborata').value = elaboratData['ostalo-ime-elaborata'];
+				} else {
+					document.getElementById('ostalo-ime-elaborata').style.display = 'none';
+				}
+	  		}
+			el.onchange = function(e){
+				if (e.currentTarget.value === "elaborat-10") {
+					document.getElementById('ostalo-ime-elaborata').style.display = 'block';
+				} else {
+					document.getElementById('ostalo-ime-elaborata').style.display = 'none';
+				}
+			};
 
+	  		var el2 = document.getElementById('dodajDrugi'),
+	  			selectBox2 = document.getElementById('usernames2');
+	  		if (elaboratData && elaboratData.usernames2) {
+	  			selectBox2.value = elaboratData.usernames2;
+
+				if (document.getElementById('usernames2').style.display === 'none') {
+					document.getElementById('usernames2').style.display = 'inline-block';
+					document.getElementById('usernames2').removeAttribute("disabled");
+					document.getElementById('dodajTreci').style.display = 'inline-block';
+				} else {
+					document.getElementById('usernames2').style.display = 'none';
+					document.getElementById('usernames2').disabled = true;
+					document.getElementById('dodajTreci').style.display = 'none';
+				}
+	  		}
+			el2.onclick = function(e){
+				if (document.getElementById('usernames2').style.display === 'none') {
+					document.getElementById('usernames2').style.display = 'inline-block';
+					document.getElementById('usernames2').removeAttribute("disabled");
+					document.getElementById('dodajTreci').style.display = 'inline-block';
+				} else {
+					document.getElementById('usernames2').style.display = 'none';
+					document.getElementById('usernames2').disabled = true;
+					document.getElementById('dodajTreci').style.display = 'none';
+				}
+			};
+
+	  		var el3 = document.getElementById('dodajTreci'),
+	  			selectBox3 = document.getElementById('usernames3');
+	  		if (elaboratData && elaboratData.usernames3) {
+	  			selectBox3.value = elaboratData.usernames3;
+
+	  			if (document.getElementById('usernames3').style.display === 'none') {
+					document.getElementById('usernames3').style.display = 'inline-block';
+					document.getElementById('usernames3').removeAttribute("disabled");
+				} else {
+					document.getElementById('usernames3').style.display = 'none';
+					document.getElementById('usernames3').disabled = true;
+				}
+	  		}
+			el3.onclick = function(e){
+				if (document.getElementById('usernames3').style.display === 'none') {
+					document.getElementById('usernames3').style.display = 'inline-block';
+					document.getElementById('usernames3').removeAttribute("disabled");
+				} else {
+					document.getElementById('usernames3').style.display = 'none';
+					document.getElementById('usernames3').disabled = true;
+				}
+			};
+
+			if (elaboratData && elaboratData['sastavni-dijelovi']) {
+				for (var s = 0; s < $('input[type=checkbox]').length; s++) {
+					if (elaboratData['sastavni-dijelovi'].indexOf($('input[type=checkbox]')[s].id) === -1) {
+						$('input[type=checkbox]')[s].checked = false;
+					}
+				}
+			}
+		};
+		
+    	var elaboratIDFromUrl = window.location.search ? window.location.search.match(/elaboratID=(\d+)/)[1] : undefined;
+    	if (elaboratIDFromUrl) {
+    		$.ajax({
+		        url: "./dohvatiElaborat?elaboratID=" + elaboratIDFromUrl, 
+		        success: function(result){
+		          createElements.call(this, JSON.parse(result));
+		        }.bind(this)
+	      	});
+    	} else {
+    		createElements.call(this);
+    	} 	
+      	
 		});
 	</script>
 	</head>

@@ -18,6 +18,10 @@ use Zend\Http\Request;
 use Zend\Filter\File\RenameUpload;
 use Zend\Filter\Compress;
 
+
+use Application\Model\Album;
+use Application\Model\Elaborat;
+
 use Application\Form\UploadForm;
 use Application\Form\CreateScenarioForm;
 use Application\Form\AddRemoveTemplatesToScenarioForm;
@@ -497,11 +501,22 @@ public function elaboratDefinitionDisplayAction()
          return $this->elaboratTable;
      }
 	 
-	public function dohvatiAction()
+	public function dohvatiSveAction()
      {
          return new ViewModel(array(
-             'albums' => $this->getElaboratTable()->fetchAll(),
+             'elaborati' => $this->getElaboratTable()->fetchAll(),
          ));
+     }
+
+
+    public function dohvatiElaboratAction()
+     {
+        //from URL
+        $elaboratID = $this->params()->fromQuery('elaboratID');
+        if (!empty($elaboratID)) {
+            $elaboratJSON = $this->getElaboratTable()->getElaborat($elaboratID);
+        }
+         echo $elaboratJSON->post; die();
      }
 
 
@@ -741,6 +756,16 @@ public function elaboratDefinitionDisplayAction()
         ),
         ));
         $compressed = $filter->filter("./data/done/".$post['elaboratID'].'-'.$oznakaElaborata);
+
+
+        //save post with ID to database
+        $elaboratPost = [
+            'id' => $post['elaboratID'],
+            'post' => $post
+            ];
+        $elaborat = new Elaborat();
+        $elaborat->exchangeArray($elaboratPost);
+        $this->getElaboratTable()->saveElaborat($elaborat);
 
         //render view with parameters
         $viewModel = new ViewModel();

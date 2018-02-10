@@ -18,37 +18,37 @@ class ElaboratTable
         return $resultSet;
     }
 
-    public function getAlbum($id)
+    public function getElaborat($id)
     {
-        $id  = (int) $id;
+        $id  = $id;
         $rowset = $this->tableGateway->select(array('id' => $id));
         $row = $rowset->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $id");
-        }
+        //if (!$row) {
+        //    throw new \Exception("Could not find row $id");
+        //}
         return $row;
     }
 
-    public function saveAlbum(Album $album)
+    public function saveElaborat(Elaborat $elaborat)
     {
         $data = array(
-            'artist' => $album->artist,
-            'title'  => $album->title,
+            'id' => $elaborat->id,
+            'post' => json_encode($elaborat->post),
         );
 
-        $id = (int) $album->id;
-        if ($id == 0) {
-            $this->tableGateway->insert($data);
-        } else {
-            if ($this->getAlbum($id)) {
+        $id = $elaborat->id;
+        if ($this->getElaborat($id)) {
+            if ($this->getElaborat($id)) {
                 $this->tableGateway->update($data, array('id' => $id));
             } else {
-                throw new \Exception('Album id does not exist');
+                throw new \Exception('elaborat id does not exist');
             }
+        } else {
+            $this->tableGateway->insert($data);
         }
     }
 
-    public function deleteAlbum($id)
+    public function deleteElaborat($id)
     {
         $this->tableGateway->delete(array('id' => (int) $id));
     }

@@ -5,13 +5,11 @@ namespace Application\Model;
 class Elaborat
 {
     public $id;
-    public $artist;
-    public $title;
+    public $post;
 
     public function exchangeArray($data)
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
-        $this->artist = (!empty($data['artist'])) ? $data['artist'] : null;
-        $this->title  = (!empty($data['title'])) ? $data['title'] : null;
+        $this->post = (!empty($data['post'])) ? $data['post'] : null;
     }
 }

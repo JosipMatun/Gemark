@@ -20,14 +20,20 @@ echo $this->headScript()
 <script type="text/javascript">
     $(document).ready(function(){
     	// Smart Wizard    	
-  		$('#wizard').smartWizard({contentURL:'<?php echo dirname($_SERVER[REQUEST_URI]).'/vrstaElaborataInput'; ?>',transitionEffect:'slideleft',onFinish:onFinishCallback});
+  		$('#wizard').smartWizard({
+        contentURL: '<?php echo dirname($_SERVER[REQUEST_URI]).'/vrstaElaborataInput'; ?>',
+        transitionEffect: 'slideleft',
+        onFinish: onFinishCallback
+      });
+
       
       function onFinishCallback(){
         // prepare Options Object 
         var options = {
             url: './elaboratSubmitHandler', 
             success: function(data) {
-                window.location = data; 
+              //alert(data);
+              window.location = data; 
             } 
         }; 
         $('form').ajaxSubmit(options)
@@ -50,10 +56,17 @@ echo $this->headScript()
   
 
   //generate elaboratID and store it to session
-  $t = microtime(true);
-  $micro = sprintf("%06d",($t - floor($t)) * 1000000);
-  $d = new \DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
-  $elaboratID = $d->format("YmdHisu"); // note at point on "u"
+  //check if elaboratID already available as parameter in URL
+  $elaboratIDURL = $_GET['elaboratID'];
+  if (empty($elaboratIDURL)) {
+    $t = microtime(true);
+    $micro = sprintf("%06d",($t - floor($t)) * 1000000);
+    $d = new \DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
+    $elaboratID = $d->format("YmdHisu"); // note at point on "u"
+  } else {
+    $elaboratID = $elaboratIDURL;
+  }
+  
 
   $session = new Container('base');
   $session->offsetSet('elaboratID', $elaboratID);
