@@ -14,7 +14,8 @@ class UlazniPodaciInputForm extends Form{
 		'name' => 'oznakaElaborata',
 		'attributes' =>  array(
 			'id' => 'oznakaElaborata',
-			'placeholder' => 'Oznaka elaborata'
+			'placeholder' => 'Oznaka elaborata',
+			'pattern' => '[A-Za-z]{3}'
 		)
 		));	
 		$this->add(array(     

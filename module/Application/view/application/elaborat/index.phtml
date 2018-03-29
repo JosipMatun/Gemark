@@ -1,25 +1,86 @@
 <html>
   <head>
      <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	 <link href="../../css/gemark-datatable.css" media="screen" rel="stylesheet" type="text/css">
+	 <link href="../../styles/demo_style.css" media="screen" rel="stylesheet" type="text/css">
+	 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	 <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	 <script type="text/javascript" src="//cdn.datatables.net/plug-ins/1.10.16/sorting/datetime-moment.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <script type="text/javascript" class="init">
+	 $(document).ready(function() {	 	
+    	$.fn.dataTable.moment( 'DD/MM/YYYY' );
+		$('#tablica').DataTable( {
+			"ajax": {
+                "processing": true,
+                "serverSide": true,
+				"url": "./elaborat/dohvatiElaboratDataTable",
+				"dataSrc":"data"
+			},
+	      "columns": [
+	        { className: "dt-body-center" },
+	        { className: "dt-body-center" },
+	        { className: "dt-body-center" },
+	        { className: "dt-body-center" },
+	        { className: "dt-body-center" },
+	        { className: "dt-body-center" }
+	      ],
+		  "columnDefs": [ {
+		    "targets": 5,
+		    "data": 0,
+		    "render": function ( data, type, row, meta ) {
+		      return '<a href="./elaborat/elaboratDefinitionDisplay?elaboratID='+data+'">Izmjena</a>';
+		    }
+		  } ,
+		   {
+		    "targets": 0,
+		    "data": 0,
+		    "render": function ( data, type, row, meta ) {
+		    	var year = data.substring(0, 4);
+		    	var month = data.substring(4, 6)-1;
+		    	var day = data.substring(6, 8);
+		    	var hour = data.substring(8, 10);
+		    	var minute = data.substring(10, 12);
+		    	var d = new Date(year, month, day, hour, minute);
+		    	//date = (d.getDate() + "." + d.getMonth() + "." + d.getUTCFullYear() + " " + d.getHours() + ":" + d.getMinutes());
+		    	date = moment(d).format('DD/MM/YYYY');
+		      return date;
+		    }
+		  } ],
+		  "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Croatian.json"
+            },
+    	  "order": [[ 0, 'desc' ]]
+
+		} );
+		} );
+	 </script>
   </head>
   <body>
-	<h1>Scenariji</h1>
-	 <ul class="list-group">
-	 	<?php
-	 	foreach ($this->filelist as $directoryLong) {
-			$directory = basename($directoryLong);
-	 		echo '<a href="'.$_SERVER[REQUEST_URI]."/displayScenarioInput?scenarioName=".$directory.'"><li class="list-group-item">'.$directory.'</li></a>';
-	 	}
-	 	?>
-	</ul>
-	</br>
-	</br>
-	<a href="<?=$_SERVER[REQUEST_URI]?>/displayCreateScenario">Stvori novi scenarij</a>
-	</br>
-	<a href="<?=$_SERVER[REQUEST_URI]?>/displayEditScenario">Uredi scenarij</a>
-	</br>
-	<a href="<?=$_SERVER[REQUEST_URI]?>/displayTemplates">Templates</a>
-	</br>
-	<a href="<?=$_SERVER[REQUEST_URI]?>/uploadForm">Add template</a>
+  	<div class="demoHead">   
+	  <div style="display: flow-root;">
+	  	<h2>
+		  	<span>Pregled elaborata</span>
+		  	<a class="btn btn-success" style="float: right; margin-right: 1em;" href="./elaborat/elaboratDefinitionDisplay">
+				Izradi novi elaborat
+			</a>
+	  	</h2>
+	  </div>
+	</div>
+	<table id="tablica" class="display">
+	<thead>
+	    <tr>
+	        <th>Datum</th>
+	        <th>OznakaElaborata</th>
+	        <th>Ime</th>
+	        <th>Prezime</th>
+	        <th>OIB</th>
+	        <th>Opcije</th>
+	    </tr>
+	</thead>
+	</table>
   </body>
 </html>

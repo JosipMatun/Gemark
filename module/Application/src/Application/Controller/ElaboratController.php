@@ -516,7 +516,37 @@ public function elaboratDefinitionDisplayAction()
         if (!empty($elaboratID)) {
             $elaboratJSON = $this->getElaboratTable()->getElaborat($elaboratID);
         }
-         echo $elaboratJSON->post; die();
+        $temp = $elaboratJSON->post;
+         echo $temp; die();
+     }
+
+    public function dohvatiElaboratDataTableAction()
+     {
+        //from URL
+        $elaboratID = $this->params()->fromQuery('elaboratID');
+        //BUG for case "true"
+        if (!empty($elaboratID)) {
+            $elaboratAllRows = $this->getElaboratTable()->getElaborat($elaboratID);
+        }else{            
+            $elaboratAllRows = $this->getElaboratTable()->fetchAll();
+        }
+        $JSONReturn = "{\"data\": [";       
+        foreach ($elaboratAllRows as $row) {
+            $temp2 = array();
+            $temp = json_decode($row->post);
+            $temp2[] = $temp->elaboratID;
+            $temp2[] = $temp->oznakaElaborata;
+            $temp2[] = $temp->ime1;
+            $temp2[] = $temp->prezime1;
+            $temp2[] = $temp->OIB1;
+            $temp2[] = $temp->elaboratID;
+            $temp2 = json_encode($temp2, true);
+            $JSONReturn = $JSONReturn.$temp2.",";
+        }
+        $JSONReturn = rtrim($JSONReturn, ",");
+        $JSONReturn = $JSONReturn."]}";
+        echo $JSONReturn;
+        die();
      }
 
 
@@ -893,6 +923,10 @@ public function elaboratDefinitionDisplayAction()
             }
         }
         return $dataArray;
+    }
+
+    public function dataTablesAction(){
+
     }
 
 	

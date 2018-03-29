@@ -1,0 +1,52 @@
+<html>
+  <head>
+     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	 <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" media="screen" rel="stylesheet" type="text/css">
+	 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	 <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	 <script type="text/javascript" class="init">
+	 $(document).ready(function() {
+		$('#tablica').DataTable( {
+			"ajax": {
+                "processing": true,
+                "serverSide": true,
+				"url": "./dohvatiElaboratDataTable?elaboratID=20180208222027873315",
+				"dataSrc":"data"
+			},
+      "columns": [
+        { className: "dt-body-center" },
+        { className: "dt-body-center" },
+        { className: "dt-body-center" },
+        { className: "dt-body-center" },
+        { className: "dt-body-center" },
+        { className: "dt-body-center" }
+      ],
+
+  "columnDefs": [ {
+    "targets": 5,
+    "data": 5,
+    "render": function ( data, type, row, meta ) {
+      return '<a href="elaboratDefinitionDisplay?elaboratID='+data+'">Edit</a>';
+    }
+  } ]
+
+		} );
+
+		} );
+	 </script>
+  </head>
+  <body>
+  <table id="tablica" class="display">
+    <thead>
+        <tr>
+            <th>Datum</th>
+            <th>OznakaElaborata</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>OIB</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+  </table>
+  </body>
+</html>

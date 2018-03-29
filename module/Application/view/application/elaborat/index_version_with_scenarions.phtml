@@ -1,0 +1,25 @@
+<html>
+  <head>
+     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  </head>
+  <body>
+	<h1>Scenariji</h1>
+	 <ul class="list-group">
+	 	<?php
+	 	foreach ($this->filelist as $directoryLong) {
+			$directory = basename($directoryLong);
+	 		echo '<a href="'.$_SERVER[REQUEST_URI]."/displayScenarioInput?scenarioName=".$directory.'"><li class="list-group-item">'.$directory.'</li></a>';
+	 	}
+	 	?>
+	</ul>
+	</br>
+	</br>
+	<a href="<?=$_SERVER[REQUEST_URI]?>/displayCreateScenario">Stvori novi scenarij</a>
+	</br>
+	<a href="<?=$_SERVER[REQUEST_URI]?>/displayEditScenario">Uredi scenarij</a>
+	</br>
+	<a href="<?=$_SERVER[REQUEST_URI]?>/displayTemplates">Templates</a>
+	</br>
+	<a href="<?=$_SERVER[REQUEST_URI]?>/uploadForm">Add template</a>
+  </body>
+</html>

@@ -16,7 +16,8 @@ echo $this->headScript()
         ->prependFile('http://malsup.github.com/jquery.form.js')
         ->prependFile($this->basePath() . '/gemark-work/public/js/jquery-2.0.0.min.js');
 ?>
-
+<style>  
+</style>
 <script type="text/javascript">
     $(document).ready(function(){
     	// Smart Wizard    	
@@ -44,7 +45,14 @@ echo $this->headScript()
 </head>
 <body>
 <div class="demoHead">   
-  <h2>Izrada elaborata</h2> 
+    <div style="display: flow-root;">
+      <h2>
+        <span>Izrada elaborata</span>
+        <a class="btn btn-success" style="float: right; margin-right: 1em; font-size: 14px; font-weight: 400;" href="../elaborat">
+        Povratak na pregled elaborata
+      </a>
+      </h2>
+    </div>
 </div>
 <table align="center" border="0" cellpadding="0" cellspacing="0">
 <tr><td>
